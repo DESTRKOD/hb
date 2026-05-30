@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Комикс для Ани! 📖</title>
+    <title>Комикс для подруги! 📖</title>
     <style>
         :root {
             --bg-image: url('https://picsum.photos/id/104/1920/1080');
@@ -21,12 +21,13 @@
         }
 
         body {
-            background-image: linear-gradient(rgba(30, 30, 36, 0.9), rgba(30, 30, 36, 0.9)), var(--bg-image);
+            background-image: linear-gradient(rgba(30, 30, 36, 0.85), rgba(30, 30, 36, 0.85)), var(--bg-image);
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
             font-family: 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
@@ -37,10 +38,18 @@
         .book-container {
             position: relative;
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
             height: 80vh;
-            max-height: 680px;
+            max-height: 700px;
             perspective: 2000px;
+        }
+
+        @media (min-width: 768px) {
+            .book-container {
+                max-width: 520px;
+                height: 85vh;
+                max-height: 800px;
+            }
         }
 
         .book {
@@ -57,41 +66,21 @@
             top: 0;
             left: 0;
             background-color: var(--page-bg);
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            padding: 15px;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            padding: 18px;
             display: flex;
             flex-direction: column;
             transform-origin: left center;
             transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
             transform-style: preserve-3d;
             backface-visibility: hidden;
-        }
-
-        .page.flipped {
-            transform: rotateY(-180deg);
-        }
-
-        @media (min-width: 1024px) {
-            .book-container {
-                max-width: 900px;
-                height: 80vh;
-                max-height: 750px;
-            }
-            .book {
-                transform: translateX(25%);
-            }
-            .page {
-                width: 50%;
-            }
-            .page.flipped {
-                transform: rotateY(-180deg) translateX(100%);
-            }
+            cursor: pointer;
         }
 
         .comic-frame {
             border: 4px solid #000;
-            border-radius: 8px;
+            border-radius: 10px;
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -101,16 +90,15 @@
         }
 
         .photo {
-            flex: 1.3;
-            background-size: contain;
+            flex: 1;
+            background-size: cover;
             background-position: center;
-            background-repeat: no-repeat;
-            background-color: #fcfcfc;
             border-bottom: 4px solid #000;
+            background-repeat: no-repeat;
+            background-color: #f0e6d2;
         }
 
         .text-bubble {
-            flex: 0.7;
             padding: 15px;
             background: #fff;
             color: var(--text-color);
@@ -118,6 +106,7 @@
             line-height: 1.4;
             text-align: center;
             font-weight: bold;
+            min-height: 95px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -133,36 +122,64 @@
             font-size: 12px;
             border-radius: 20px;
             font-weight: bold;
-            z-index: 10;
         }
 
+        .page.flipped {
+            transform: rotateY(-180deg);
+        }
+
+        /* Стиль для титульной страницы без фото */
         .title-page {
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            background: linear-gradient(135deg, #ff5e62, #ff9966);
         }
         .title-page .comic-frame {
             background: transparent;
             border-color: #fff;
+            display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            text-align: center;
+        }
+        .title-page .photo {
+            display: none;
         }
         .title-page .text-bubble {
             background: transparent;
             color: #fff;
+            font-size: 22px;
+            min-height: auto;
             flex-direction: column;
-            gap: 15px;
+            gap: 20px;
         }
         .main-title {
-            font-size: 26px;
-            line-height: 1.3;
-            text-shadow: 2px 2px 0px #000;
-            font-weight: bold;
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            line-height: 1.2;
+            text-transform: uppercase;
+            text-shadow: 4px 4px 8px rgba(0,0,0,0.3);
         }
         .sub-author {
-            font-size: 16px;
-            font-style: italic;
+            font-size: 14px;
             opacity: 0.9;
+            margin-top: 20px;
+            font-style: italic;
         }
-        .title-page .page-badge {
+
+        .cover {
+            background: linear-gradient(135deg, #ff5e62, #ff9966);
+        }
+        .cover .comic-frame {
+            background: transparent;
+            border-color: #fff;
+        }
+        .cover .text-bubble {
+            background: transparent;
+            color: #fff;
+            font-size: 22px;
+        }
+        .cover .page-badge {
             background: #fff;
             color: #000;
         }
@@ -187,11 +204,10 @@
 </head>
 <body>
 
-    <audio id="flipSound" src="https://www.soundjay.com/misc/sounds/page-turn-01.mp3" preload="auto"></audio>
-
     <div class="book-container">
         <div class="book" id="book">
 
+            <!-- НОВАЯ ТИТУЛЬНАЯ СТРАНИЦА (самая первая) -->
             <div class="page title-page">
                 <div class="comic-frame">
                     <div class="text-bubble">
@@ -202,10 +218,10 @@
                 </div>
             </div>
 
-            <div class="page">
+            <div class="page cover">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://picsum.photos/id/20/400/300');"></div>
-                    <div class="text-bubble">А вот так все начиналось... Перелистывай дальше, чтобы узнать всю историю Ани! 😉</div>
+                    <div class="text-bubble">Один день из жизни именинницы! 📖✨</div>
                     <div class="page-badge">2 / 11</div>
                 </div>
             </div>
@@ -213,7 +229,7 @@
             <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://picsum.photos/id/22/400/300');"></div>
-                    <div class="text-bubble">08:00 — Утро начинается точно не с кофе... А с отчаянных попыток проснуться! ⏰</div>
+                    <div class="text-bubble">08:00 — Утро начинается не с кофе... А с попыток проснуться! ⏰</div>
                     <div class="page-badge">3 / 11</div>
                 </div>
             </div>
@@ -221,7 +237,7 @@
             <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://picsum.photos/id/30/400/300');"></div>
-                    <div class="text-bubble">08:30 — Твоя обязательная утренняя чашка кофе ☕ Без неё этот день просто не начнется!</div>
+                    <div class="text-bubble">08:30 — Твоя обязательная чашка кофе ☕ Без неё утро не валидно!</div>
                     <div class="page-badge">4 / 11</div>
                 </div>
             </div>
@@ -229,7 +245,7 @@
             <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://picsum.photos/id/26/400/300');"></div>
-                    <div class="text-bubble">09:15 — Дорога. Максимально серьезная и деловая Аня пошла покорять этот мир. 💼</div>
+                    <div class="text-bubble">09:15 — Дорога. Максимально серьезная пошла покорять этот мир. 💼</div>
                     <div class="page-badge">5 / 11</div>
                 </div>
             </div>
@@ -237,7 +253,7 @@
             <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://picsum.photos/id/1/400/300');"></div>
-                    <div class="text-bubble">12:00 — Тот самый момент среди дня, когда тебе прислали угарный мем в рабочий чат!</div>
+                    <div class="text-bubble">12:00 — Тот самый момент, когда прислали угарный мем в рабочий чат!</div>
                     <div class="page-badge">6 / 11</div>
                 </div>
             </div>
@@ -245,7 +261,7 @@
             <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://picsum.photos/id/108/400/300');"></div>
-                    <div class="text-bubble">14:00 — Обееед! Время для твоей любимой пиццы, роллов или чего-нибудь очень вкусного 🍕</div>
+                    <div class="text-bubble">14:00 — Обееед! Время для любимой пиццы или роллов 🍕</div>
                     <div class="page-badge">7 / 11</div>
                 </div>
             </div>
@@ -253,7 +269,7 @@
             <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://picsum.photos/id/145/400/300');"></div>
-                    <div class="text-bubble">16:30 — Время для главных сплетен, важных историй и очень эмоциональных рассказов руками! ✨</div>
+                    <div class="text-bubble">16:30 — Сплетни, важные истории и рассказы руками! ✨</div>
                     <div class="page-badge">8 / 11</div>
                 </div>
             </div>
@@ -261,7 +277,7 @@
             <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://picsum.photos/id/168/400/300');"></div>
-                    <div class="text-bubble">19:00 — Включаются твои фирменные танцы, которые знают и любят абсолютно все вокруг! 💃</div>
+                    <div class="text-bubble">19:00 — Включаются твои фирменные танцы, которые знают все! 💃</div>
                     <div class="page-badge">9 / 11</div>
                 </div>
             </div>
@@ -269,7 +285,7 @@
             <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://picsum.photos/id/96/400/300');"></div>
-                    <div class="text-bubble">22:00 — Уставшие, но самые счастливые под конец этого дня. Теперь можно и отдохнуть!</div>
+                    <div class="text-bubble">22:00 — Уставшие, но самые счастливые под конец этого дня.</div>
                     <div class="page-badge">10 / 11</div>
                 </div>
             </div>
@@ -277,7 +293,7 @@
             <div class="page back-cover">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://picsum.photos/id/29/400/300');"></div>
-                    <div class="text-bubble">С ДНЕМ РОЖДЕНИЯ, АНЯ! Наша история продолжается... 🎉🎂</div>
+                    <div class="text-bubble">С ДНЕМ РОЖДЕНИЯ! Наша история продолжается... 🎉🎂</div>
                     <div class="page-badge">11 / 11</div>
                 </div>
             </div>
@@ -286,19 +302,45 @@
     </div>
 
     <script>
-        const pages = Array.from(document.querySelectorAll('.page'));
-        const flipSound = document.getElementById('flipSound');
+        const pages = Array.from(document.querySelectorAll('.page')).reverse();
         
         pages.forEach((page, idx) => {
-            page.style.zIndex = pages.length - idx;
+            page.style.zIndex = idx;
         });
-        
-        let currentPageIndex = 0;
+
+        let currentPageIndex = pages.length - 1;
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let audioBuffer = null;
+        const flipAudioBase64 = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAAoACgAKAAoA";
+
+        fetch(flipAudioBase64)
+            .then(res => res.arrayBuffer())
+            .then(data => audioCtx.decodeAudioData(data))
+            .then(buffer => { audioBuffer = buffer; })
+            .catch(e => console.log("Ошибка аудио:", e));
 
         function playFlipSound() {
-            if (flipSound) {
-                flipSound.currentTime = 0;
-                flipSound.play().catch(e => console.log("Аудио активируется кликом"));
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            
+            if (audioBuffer) {
+                const source = audioCtx.createBufferSource();
+                source.buffer = audioBuffer;
+                source.connect(audioCtx.destination);
+                source.start(0);
+            } else {
+                const bufferSize = audioCtx.sampleRate * 0.15;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 2) * 0.15;
+                }
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+                noise.connect(audioCtx.destination);
+                noise.start(0);
             }
         }
 
@@ -307,17 +349,15 @@
             const clickX = e.clientX - e.currentTarget.getBoundingClientRect().left;
             
             if (clickX > bookWidth / 2) {
-                if (currentPageIndex < pages.length - 1) {
+                if (currentPageIndex > 0) {
                     pages[currentPageIndex].classList.add('flipped');
-                    pages[currentPageIndex].style.zIndex = currentPageIndex;
                     playFlipSound();
-                    currentPageIndex++;
+                    currentPageIndex--;
                 }
             } else {
-                if (currentPageIndex > 0) {
-                    currentPageIndex--;
+                if (currentPageIndex < pages.length - 1) {
+                    currentPageIndex++;
                     pages[currentPageIndex].classList.remove('flipped');
-                    pages[currentPageIndex].style.zIndex = pages.length - currentPageIndex;
                     playFlipSound();
                 }
             }
