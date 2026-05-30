@@ -7,94 +7,70 @@
   <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.min.js"></script>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    body, html { margin:0; padding:0; height:100%; background:#111; overflow:hidden; font-family:sans-serif; }
-    #book { width:100vw; height:100vh; margin:0 auto; background:#222; box-shadow:0 0 30px rgba(0,0,0,0.8); }
+    body, html { margin:0; padding:0; height:100%; background:#000; overflow:hidden; font-family:sans-serif; }
+    #book { width:100vw; height:100vh; background:#222; }
     .page { 
-      width:100%; height:100%; box-sizing:border-box; padding:20px; 
-      background:#f8f1e3; color:#222; font-size:18px; line-height:1.4;
+      width:100%; height:100%; padding:25px; box-sizing:border-box;
+      background:#f8f1e3; color:#222; font-size:17px; line-height:1.35;
       display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;
-      border:1px solid #ddd; box-shadow:inset 0 0 40px rgba(0,0,0,0.1);
+      border:1px solid #ddd; box-shadow:inset 0 0 50px rgba(0,0,0,0.15);
     }
-    .page img { max-width:95%; border:4px solid #222; border-radius:8px; margin:10px 0; }
-    .bubble { background:#fff; padding:12px 20px; border-radius:30px; border:3px solid #222; margin:15px; max-width:80%; }
-    .caption { font-size:16px; font-style:italic; margin-top:10px; }
-    button { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); z-index:100; padding:10px 20px; background:#ff4d94; color:white; border:none; border-radius:30px; font-size:18px; }
+    .page img { max-width:96%; border:5px solid #333; border-radius:12px; }
+    .bubble { background:#fff; padding:15px 22px; border-radius:40px; border:4px solid #222; margin:15px 0; font-size:18px; }
+    button { position:fixed; bottom:15px; padding:12px 20px; font-size:18px; border:none; border-radius:50px; color:white; z-index:999; }
+    #prev { left:20px; background:#666; }
+    #next { right:20px; background:#ff4d94; }
+    #hint { position:fixed; top:10px; left:50%; transform:translateX(-50%); color:#aaa; font-size:14px; background:rgba(0,0,0,0.6); padding:5px 15px; border-radius:20px; z-index:1000; }
   </style>
 </head>
 <body>
 
+<div id="hint">👉 Тяни за угол страницы пальцем • работает на iPhone</div>
+
 <div id="book">
-  <!-- Обложка -->
-  <div class="page" data-density="hard">
-    <h1 style="font-size:32px; margin:0;">🎉 Один день Маши</h1>
-    <p style="font-size:22px;">Её лучший день рождения ❤️</p>
-    <img src="https://via.placeholder.com/600x800/ffc0cb/fff?text=Фото+Маша+с+тортом" alt="cover">
-    <p>Автор: ты 💪</p>
-  </div>
-
-  <!-- Страница 1 -->
-  <div class="page">
-    <h2>Утро ☀️</h2>
-    <img src="https://via.placeholder.com/600x400/ff69b4/fff?text=Маша+просыпается" alt="photo1">
-    <div class="bubble">«Ого, уже 12:00?!»</div>
-    <div class="caption">Ты принёс ей завтрак в постель</div>
-  </div>
-
-  <!-- Страница 2 -->
-  <div class="page">
-    <h2>Подарки 🎁</h2>
-    <img src="https://via.placeholder.com/600x400/ffb6c1/000?text=Открывает+твой+подарок" alt="photo2">
-    <div class="bubble">«Это то самое, о чём я мечтала!!!» 😭❤️</div>
-  </div>
-
-  <!-- Страница 3 (можно добавить ещё сколько угодно) -->
-  <div class="page">
-    <h2>Прогулка 🌳</h2>
-    <img src="https://via.placeholder.com/600x400/87ceeb/000?text=Мы+гуляем+и+смеёмся" alt="photo3">
-    <p class="caption">Кадр 7 • 15:42</p>
-  </div>
-
-  <!-- Страница 4 -->
-  <div class="page">
-    <h2>Торт и свечи 🕯️</h2>
-    <img src="https://via.placeholder.com/600x400/ffd700/000?text=Дуем+свечи+вместе" alt="photo4">
-    <div class="bubble">«Желаю... чтобы мы всегда были вместе!»</div>
-  </div>
-
-  <!-- Задняя обложка -->
-  <div class="page" data-density="hard">
-    <h2 style="margin-top:40%;">Конец ❤️</h2>
-    <p>Спасибо, что ты у меня есть.<br>С днём рождения, любимая!</p>
-    <img src="https://via.placeholder.com/300x300/ffc0cb/fff?text=Сердечко" style="width:120px;">
-  </div>
+  <!-- страницы как раньше, можешь оставить свои -->
+  <div class="page" data-density="hard">... твоя обложка ...</div>
+  <div class="page">... страница 1 ...</div>
+  <div class="page">... страница 2 ...</div>
+  <!-- добавляй сколько угодно -->
 </div>
 
-<button onclick="pageFlip.flipNext()">▶ Следующая страница</button>
+<button id="prev">◀ Назад</button>
+<button id="next">Следующая ▶</button>
 
 <script>
   Telegram.WebApp.ready();
-  Telegram.WebApp.expand();           // разворачивает на весь экран в мини-аппе
+  Telegram.WebApp.expand();
 
   const book = document.getElementById('book');
-  
-  const pageFlip = new PageFlip(book, {
-    width: 420,           // ширина одной страницы (под iPhone удобно)
-    height: 620,
-    size: "stretch",      // подстраивается под экран
-    drawShadow: true,
-    flippingTime: 900,    // скорость переворота (чем меньше — быстрее)
-    maxShadowOpacity: 0.6,
-    showCover: true,
-    mobileScrollSupport: true,
-    useMouseEvents: true,
-    usePortrait: true
-  });
+  let pageFlip;   // ← теперь видно везде
 
-  // Загружаем все .page
-  pageFlip.loadFromHTML(document.querySelectorAll('.page'));
+  function initBook() {
+    pageFlip = new PageFlip(book, {
+      width: 400,
+      height: 620,
+      size: "stretch",
+      drawShadow: true,
+      flippingTime: 850,
+      maxShadowOpacity: 0.7,
+      showCover: true,
+      mobileScrollSupport: true,
+      useMouseEvents: true,
+      usePortrait: true,
+      startPage: 0
+    });
 
-  // Можно добавить свои фото по ссылкам
-  // Просто замени src="https://..." на свои (imgur, telegram, vk и т.д.)
+    pageFlip.loadFromHTML(document.querySelectorAll('.page'));
+
+    // Кнопки работают 100%
+    document.getElementById('next').addEventListener('click', () => pageFlip.flipNext());
+    document.getElementById('prev').addEventListener('click', () => pageFlip.flipPrev());
+
+    console.log('✅ Книжка загружена! Страниц:', pageFlip.getPageCount());
+  }
+
+  // Запускаем после полной загрузки
+  window.onload = initBook;
 </script>
 
 </body>
