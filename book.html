@@ -6,7 +6,7 @@
     <title>Комикс для подруги! 📖</title>
     <style>
         :root {
-            --bg-image: url('https://i.imgur.com/PF0ZvT7.jpeg');
+            --bg-image: url('https://picsum.photos/id/104/1920/1080');
             --page-bg: #fffdf0;
             --text-color: #111;
         }
@@ -128,6 +128,45 @@
             transform: rotateY(-180deg);
         }
 
+        /* Стиль для титульной страницы без фото */
+        .title-page {
+            background: linear-gradient(135deg, #ff5e62, #ff9966);
+        }
+        .title-page .comic-frame {
+            background: transparent;
+            border-color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .title-page .photo {
+            display: none;
+        }
+        .title-page .text-bubble {
+            background: transparent;
+            color: #fff;
+            font-size: 22px;
+            min-height: auto;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .main-title {
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            line-height: 1.2;
+            text-transform: uppercase;
+            text-shadow: 4px 4px 8px rgba(0,0,0,0.3);
+        }
+        .sub-author {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: 20px;
+            font-style: italic;
+        }
+
         .cover {
             background: linear-gradient(135deg, #ff5e62, #ff9966);
         }
@@ -161,14 +200,6 @@
             background: #fff;
             color: #000;
         }
-
-        .hint {
-            margin-top: 15px;
-            color: rgba(255,255,255,0.8);
-            font-size: 14px;
-            text-align: center;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
     </style>
 </head>
 <body>
@@ -176,11 +207,22 @@
     <div class="book-container">
         <div class="book" id="book">
 
+            <!-- НОВАЯ ТИТУЛЬНАЯ СТРАНИЦА (самая первая) -->
+            <div class="page title-page">
+                <div class="comic-frame">
+                    <div class="text-bubble">
+                        <div class="main-title">КАК ЖИЛА АНЯ<br>или С ДНЁМ РОЖДЕНИЯ!</div>
+                        <div class="sub-author">автор: лучший друг</div>
+                    </div>
+                    <div class="page-badge">1 / 11</div>
+                </div>
+            </div>
+
             <div class="page cover">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://picsum.photos/id/20/400/300');"></div>
                     <div class="text-bubble">Один день из жизни именинницы! 📖✨</div>
-                    <div class="page-badge">1 / 10</div>
+                    <div class="page-badge">2 / 11</div>
                 </div>
             </div>
 
@@ -188,7 +230,7 @@
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://picsum.photos/id/22/400/300');"></div>
                     <div class="text-bubble">08:00 — Утро начинается не с кофе... А с попыток проснуться! ⏰</div>
-                    <div class="page-badge">2 / 10</div>
+                    <div class="page-badge">3 / 11</div>
                 </div>
             </div>
 
@@ -196,7 +238,7 @@
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://picsum.photos/id/30/400/300');"></div>
                     <div class="text-bubble">08:30 — Твоя обязательная чашка кофе ☕ Без неё утро не валидно!</div>
-                    <div class="page-badge">3 / 10</div>
+                    <div class="page-badge">4 / 11</div>
                 </div>
             </div>
 
@@ -204,7 +246,7 @@
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://picsum.photos/id/26/400/300');"></div>
                     <div class="text-bubble">09:15 — Дорога. Максимально серьезная пошла покорять этот мир. 💼</div>
-                    <div class="page-badge">4 / 10</div>
+                    <div class="page-badge">5 / 11</div>
                 </div>
             </div>
 
@@ -212,7 +254,7 @@
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://picsum.photos/id/1/400/300');"></div>
                     <div class="text-bubble">12:00 — Тот самый момент, когда прислали угарный мем в рабочий чат!</div>
-                    <div class="page-badge">5 / 10</div>
+                    <div class="page-badge">6 / 11</div>
                 </div>
             </div>
 
@@ -220,7 +262,7 @@
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://picsum.photos/id/108/400/300');"></div>
                     <div class="text-bubble">14:00 — Обееед! Время для любимой пиццы или роллов 🍕</div>
-                    <div class="page-badge">6 / 10</div>
+                    <div class="page-badge">7 / 11</div>
                 </div>
             </div>
 
@@ -228,7 +270,7 @@
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://picsum.photos/id/145/400/300');"></div>
                     <div class="text-bubble">16:30 — Сплетни, важные истории и рассказы руками! ✨</div>
-                    <div class="page-badge">7 / 10</div>
+                    <div class="page-badge">8 / 11</div>
                 </div>
             </div>
 
@@ -236,7 +278,7 @@
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://picsum.photos/id/168/400/300');"></div>
                     <div class="text-bubble">19:00 — Включаются твои фирменные танцы, которые знают все! 💃</div>
-                    <div class="page-badge">8 / 10</div>
+                    <div class="page-badge">9 / 11</div>
                 </div>
             </div>
 
@@ -244,7 +286,7 @@
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://picsum.photos/id/96/400/300');"></div>
                     <div class="text-bubble">22:00 — Уставшие, но самые счастливые под конец этого дня.</div>
-                    <div class="page-badge">9 / 10</div>
+                    <div class="page-badge">10 / 11</div>
                 </div>
             </div>
 
@@ -252,14 +294,12 @@
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://picsum.photos/id/29/400/300');"></div>
                     <div class="text-bubble">С ДНЕМ РОЖДЕНИЯ! Наша история продолжается... 🎉🎂</div>
-                    <div class="page-badge">10 / 10</div>
+                    <div class="page-badge">11 / 11</div>
                 </div>
             </div>
 
         </div>
     </div>
-
-    <div class="hint">Нажимай на правый край — вперед, на левый — назад. Со звуком! 🔊</div>
 
     <script>
         const pages = Array.from(document.querySelectorAll('.page')).reverse();
