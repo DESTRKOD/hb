@@ -6,7 +6,7 @@
     <title>Комикс для подруги! 📖</title>
     <style>
         :root {
-            --bg-image: url('https://picsum.photos/id/104/1920/1080');
+            --bg-image: url('https://i.imgur.com/PF0ZvT7.jpeg');
             --page-bg: #fffdf0;
             --text-color: #111;
         }
@@ -173,8 +173,6 @@
 </head>
 <body>
 
-    <audio id="flipSound" src="https://www.soundjay.com/misc/sounds/page-turn-01.mp3" preload="auto"></audio>
-
     <div class="book-container">
         <div class="book" id="book">
 
@@ -261,11 +259,10 @@
         </div>
     </div>
 
-    <div class="hint">Нажимай на правый край — вперед, на левый — назад. Попробуй со звуком! 🔊</div>
+    <div class="hint">Нажимай на правый край — вперед, на левый — назад. Со звуком! 🔊</div>
 
     <script>
         const pages = Array.from(document.querySelectorAll('.page')).reverse();
-        const flipSound = document.getElementById('flipSound');
         
         pages.forEach((page, idx) => {
             page.style.zIndex = idx;
@@ -273,12 +270,37 @@
 
         let currentPageIndex = pages.length - 1;
 
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let audioBuffer = null;
+        const flipAudioBase64 = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAAoACgAKAAoA";
+
+        fetch(flipAudioBase64)
+            .then(res => res.arrayBuffer())
+            .then(data => audioCtx.decodeAudioData(data))
+            .then(buffer => { audioBuffer = buffer; })
+            .catch(e => console.log("Ошибка аудио:", e));
+
         function playFlipSound() {
-            if (flipSound) {
-                flipSound.currentTime = 0;
-                flipSound.play().catch(err => {
-                    console.log("Браузер заблокировал звук до первого взаимодействия.");
-                });
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            
+            if (audioBuffer) {
+                const source = audioCtx.createBufferSource();
+                source.buffer = audioBuffer;
+                source.connect(audioCtx.destination);
+                source.start(0);
+            } else {
+                const bufferSize = audioCtx.sampleRate * 0.15;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 2) * 0.15;
+                }
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+                noise.connect(audioCtx.destination);
+                noise.start(0);
             }
         }
 
