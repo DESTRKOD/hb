@@ -1,141 +1,275 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
-  <title>🎂 Один день Маши • День рождения 2026</title>
-  <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.min.js"></script>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <style>
-    body, html {margin:0; padding:0; height:100%; background:#111; overflow:hidden; font-family:sans-serif;}
-    #book {width:100vw; height:100vh; background:#222;}
-    .page {
-      width:100%; height:100%; padding:20px; box-sizing:border-box;
-      background:#f8f1e3; color:#222; display:flex; flex-direction:column;
-      justify-content:center; align-items:center; text-align:center;
-      border:2px solid #333; box-shadow:inset 0 0 60px rgba(0,0,0,0.2);
-      position:relative; overflow:hidden;
-    }
-    .page img {max-width:98%; border:6px solid #222; border-radius:10px; margin:8px 0;}
-    .bubble {background:#fff; padding:14px 22px; border-radius:35px; border:4px solid #222; font-size:19px; max-width:85%; margin:12px 0;}
-    .caption {font-size:15px; color:#555; margin-top:8px; font-style:italic;}
-    .time {position:absolute; top:12px; right:12px; background:rgba(0,0,0,0.6); color:#fff; padding:3px 10px; border-radius:20px; font-size:13px;}
-    button {position:fixed; bottom:15px; padding:14px 24px; font-size:17px; border:none; border-radius:50px; color:white; z-index:999;}
-    #prev {left:15px; background:#666;}
-    #next {right:15px; background:#ff4d94;}
-    #hint {position:fixed; top:8px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.7); color:#fff; padding:6px 16px; border-radius:20px; font-size:13px; z-index:1000;}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Комикс-День Рождения!</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --page-bg: #fffdf0;
+            --text-color: #2b2b2b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+        }
+
+        .book {
+            position: relative;
+            width: 90vw;
+            height: 75vh;
+            max-width: 400px;
+            max-height: 650px;
+            perspective: 1500px;
+        }
+
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-color: var(--page-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transform-origin: left center;
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            transform-style: preserve-3d;
+            z-index: 1;
+            cursor: pointer;
+        }
+
+        .comic-border {
+            border: 3px solid #000;
+            border-radius: 8px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: #fff;
+            position: relative;
+        }
+
+        .photo-container {
+            flex: 1;
+            background-size: cover;
+            background-position: center;
+            border-bottom: 3px solid #000;
+        }
+
+        .caption {
+            padding: 12px;
+            background: #fff;
+            color: var(--text-color);
+            font-size: 16px;
+            line-height: 1.3;
+            text-align: center;
+            font-weight: bold;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page-number {
+            position: absolute;
+            bottom: 5px;
+            right: 10px;
+            font-size: 12px;
+            color: #888;
+        }
+
+        .page.flipped {
+            transform: rotateY(-180deg);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .cover {
+            background: linear-gradient(135deg, #ff5e62, #ff9966);
+            color: white;
+        }
+        .cover .comic-border {
+            background: transparent;
+            border-color: #fff;
+        }
+        .cover .caption {
+            background: transparent;
+            color: #fff;
+            font-size: 24px;
+        }
+
+        .back-cover {
+            background: linear-gradient(135deg, #654ea3, #eaafc8);
+            color: white;
+        }
+
+        .hint {
+            position: absolute;
+            bottom: -40px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: #fff;
+            font-size: 14px;
+            opacity: 0.7;
+            animation: pulse 2s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.4; }
+            50% { opacity: 1; }
+            100% { opacity: 0.4; }
+        }
+    </style>
 </head>
 <body>
 
-<div id="hint">👉 Тяни за правый нижний угол • Кнопки работают</div>
+    <div class="book" id="comicBook">
+        <div class="hint">Тапни по странице, чтобы листать</div>
 
-<div id="book">
+        <div class="page back-cover" style="z-index: 1;">
+            <div class="comic-border">
+                <div class="photo-container" style="background-image: url('https://via.placeholder.com/400x300?text=Финал');"></div>
+                <div class="caption" style="background: transparent; color: #fff;">С Днем Рождения! Наша история продолжается... 🎉🎂</div>
+                <div class="page-number">10</div>
+            </div>
+        </div>
 
-  <!-- 1. Обложка -->
-  <div class="page" data-density="hard">
-    <h1 style="font-size:34px;margin:5px;">🎉 ОДИН ДЕНЬ МАШИ</h1>
-    <p style="font-size:22px;">Её самый счастливый день рождения ❤️</p>
-    <img src="https://picsum.photos/id/1015/600/700" alt="Маша">
-    <p style="margin-top:10px;font-size:18px;">Автор: ты 💪<br>30 мая 2026</p>
-  </div>
+        <div class="page" style="z-index: 2;">
+            <div class="comic-border">
+                <div class="photo-container" style="background-image: url('https://via.placeholder.com/400x300?text=Уставшие+но+счастливые');"></div>
+                <div class="caption">И под вечер мы уставшие, но такие счастливые!</div>
+                <div class="page-number">9</div>
+            </div>
+        </div>
 
-  <!-- 2. Страница 1 -->
-  <div class="page">
-    <div class="time">09:15 • Утро ☀️</div>
-    <h2>Маша просыпается</h2>
-    <img src="https://picsum.photos/id/201/600/420" alt="проснулась">
-    <div class="bubble">«Огооо… уже мой день рождения?! 😳»</div>
-    <div class="caption">Ты принёс кофе и цветы в постель 🌷</div>
-  </div>
+        <div class="page" style="z-index: 3;">
+            <div class="comic-border">
+                <div class="photo-container" style="background-image: url('https://via.placeholder.com/400x300?text=Танцы');"></div>
+                <div class="caption">Твои фирменные танцы, которые знают все вокруг 💃</div>
+                <div class="page-number">8</div>
+            </div>
+        </div>
 
-  <!-- 3. Страница 2 -->
-  <div class="page">
-    <div class="time">10:40 • Подарки 🎁</div>
-    <h2>Открывает твой подарок</h2>
-    <img src="https://picsum.photos/id/237/600/420" alt="подарок">
-    <div class="bubble">«Это же то самое!!! Как ты узнал?! 😭❤️»</div>
-    <div class="caption">Она обнимает тебя 5 минут подряд</div>
-  </div>
+        <div class="page" style="z-index: 4;">
+            <div class="comic-border">
+                <div class="photo-container" style="background-image: url('https://via.placeholder.com/400x300?text=Смешная+история');"></div>
+                <div class="caption">А тут ты рассказываешь очередную смешную историю!</div>
+                <div class="page-number">7</div>
+            </div>
+        </div>
 
-  <!-- 4. Страница 3 -->
-  <div class="page">
-    <div class="time">12:05 • Торт 🧁</div>
-    <h2>Первый кусок торта</h2>
-    <img src="https://picsum.photos/id/312/600/420" alt="торт">
-    <div class="bubble">«Мммм… это лучший торт в моей жизни!»</div>
-    <div class="caption">Ты поставил свечку и заснял видео</div>
-  </div>
+        <div class="page" style="z-index: 5;">
+            <div class="comic-border">
+                <div class="photo-container" style="background-image: url('https://via.placeholder.com/400x300?text=Обед');"></div>
+                <div class="caption">Обед! Время для твоей любимой еды 🍕</div>
+                <div class="page-number">6</div>
+            </div>
+        </div>
 
-  <!-- 5. Страница 4 -->
-  <div class="page">
-    <div class="time">14:30 • Прогулка 🌳</div>
-    <h2>Гуляем в парке</h2>
-    <img src="https://picsum.photos/id/431/600/420" alt="парк">
-    <div class="bubble">«С тобой даже обычная прогулка — это праздник»</div>
-    <div class="caption">Она смеётся и делает селфи каждые 10 метров 📸</div>
-  </div>
+        <div class="page" style="z-index: 6;">
+            <div class="comic-border">
+                <div class="photo-container" style="background-image: url('https://via.placeholder.com/400x300?text=Мем');"></div>
+                <div class="caption">Тот самый момент, когда ты увидела мем в телефоне.</div>
+                <div class="page-number">5</div>
+            </div>
+        </div>
 
-  <!-- 6. Страница 5 -->
-  <div class="page">
-    <div class="time">17:20 • Друзья 🎉</div>
-    <h2>Пришли поздравлять</h2>
-    <img src="https://picsum.photos/id/64/600/420" alt="друзья">
-    <div class="bubble">«Ребята, вы лучшие!!!»</div>
-    <div class="caption">Все вместе поём «С днём рождения»</div>
-  </div>
+        <div class="page" style="z-index: 7;">
+            <div class="comic-border">
+                <div class="photo-container" style="background-image: url('https://via.placeholder.com/400x300?text=Дорога');"></div>
+                <div class="caption">Дорога на учебу/работу. Серьезная и деловая! 💼</div>
+                <div class="page-number">4</div>
+            </div>
+        </div>
 
-  <!-- 7. Страница 6 -->
-  <div class="page">
-    <div class="time">21:55 • Вечер 🌙</div>
-    <h2>Конец самого лучшего дня</h2>
-    <img src="https://picsum.photos/id/870/600/420" alt="вечер">
-    <div class="bubble">«Спасибо, что ты у меня есть… Я очень счастлива ❤️»</div>
-    <div class="caption">Она засыпает у тебя на плече</div>
-  </div>
+        <div class="page" style="z-index: 8;">
+            <div class="comic-border">
+                <div class="photo-container" style="background-image: url('https://via.placeholder.com/400x300?text=Кофе');"></div>
+                <div class="caption">Твоя обязательная утренняя чашка кофе ☕ без нее никуда!</div>
+                <div class="page-number">3</div>
+            </div>
+        </div>
 
-  <!-- 8. Задняя обложка -->
-  <div class="page" data-density="hard">
-    <h2 style="margin-top:30%; font-size:28px;">Конец этой главы ❤️</h2>
-    <p style="font-size:19px;">Но история только начинается…<br><br>С днём рождения, моя любимая Маша 💍</p>
-    <p style="margin-top:40px; font-size:17px;">Твой человек • 2026</p>
-  </div>
+        <div class="page" style="z-index: 9;">
+            <div class="comic-border">
+                <div class="photo-container" style="background-image: url('https://via.placeholder.com/400x300?text=Просыпаемся');"></div>
+                <div class="caption">Утро начинается не с кофе... А с попыток проснуться! ⏰</div>
+                <div class="page-number">2</div>
+            </div>
+        </div>
 
-</div>
+        <div class="page cover" style="z-index: 10;">
+            <div class="comic-border">
+                <div class="photo-container" style="background-image: url('https://via.placeholder.com/400x300?text=Именинница');"></div>
+                <div class="caption">Один день из жизни именинницы! 📖✨ <br><small style="font-size:12px;">(Листай дальше)</small></div>
+                <div class="page-number">1</div>
+            </div>
+        </div>
+    </div>
 
-<button id="prev">◀ Назад</button>
-<button id="next">Следующая страница ▶</button>
+    <script>
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.ready();
+            tg.expand();
+        }
 
-<script>
-  Telegram.WebApp.ready();
-  Telegram.WebApp.expand();
+        function triggerHaptic() {
+            try {
+                if (tg && tg.HapticFeedback) {
+                    tg.HapticFeedback.impactOccurred('medium');
+                } else if (navigator.vibrate) {
+                    navigator.vibrate(20);
+                }
+            } catch(e) {
+                console.log('Haptic feedback not available');
+            }
+        }
 
-  let pageFlip;
-
-  function init() {
-    const book = document.getElementById('book');
-    pageFlip = new PageFlip(book, {
-      width: 390,
-      height: 620,
-      size: "stretch",
-      drawShadow: true,
-      flippingTime: 900,
-      maxShadowOpacity: 0.65,
-      showCover: true,
-      mobileScrollSupport: true,
-      useMouseEvents: true
-    });
-
-    pageFlip.loadFromHTML(document.querySelectorAll('.page'));
-
-    document.getElementById('next').onclick = () => pageFlip.flipNext();
-    document.getElementById('prev').onclick = () => pageFlip.flipPrev();
-
-    console.log('✅ Книжка готова! Страниц:', pageFlip.getPageCount());
-  }
-
-  window.onload = init;
-</script>
-
+        const pages = document.querySelectorAll('.page');
+        let currentPageIndex = 0;
+        
+        function flipNextPage() {
+            if (currentPageIndex >= pages.length - 1) return;
+            
+            const currentPage = pages[currentPageIndex];
+            if (currentPage && !currentPage.classList.contains('flipped')) {
+                currentPage.classList.add('flipped');
+                triggerHaptic();
+                currentPageIndex++;
+            }
+        }
+        
+        pages.forEach((page, index) => {
+            page.addEventListener('click', (e) => {
+                e.stopPropagation();
+                flipNextPage();
+            });
+        });
+    </script>
 </body>
 </html>
