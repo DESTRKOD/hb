@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Комикс для Ани! 📖</title>
+    <title>Комикс для Ани! 📖 25 страниц</title>
     <style>
         * {
             box-sizing: border-box;
@@ -28,7 +28,6 @@
             margin: 0;
         }
 
-        /* Контейнер книги — адаптив */
         .book-container {
             position: relative;
             width: 100%;
@@ -48,7 +47,6 @@
             transition: transform 0.2s ease;
         }
 
-        /* Общие стили страниц */
         .page {
             position: absolute;
             width: 100%;
@@ -67,12 +65,10 @@
             will-change: transform;
         }
 
-        /* Перевернутая страница */
         .page.flipped {
             transform: rotateY(-180deg);
         }
 
-        /* Десктопный режим (шире 900px) — двухстраничный вид с перелистыванием как у книги */
         @media (min-width: 1024px) {
             .book-container {
                 max-width: 1000px;
@@ -88,24 +84,17 @@
                 width: 50%;
                 box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
             }
-            /* Ключевое: для десктопа переворот должен сдвигать страницу вправо, чтобы она скрывалась */
             .page.flipped {
                 transform: rotateY(-180deg) translateX(100%);
             }
-            /* Чтобы левая сторона (перевернутая) не мешала кликам, но визуально корректно */
-            .page:not(.flipped) {
-                z-index: 10;
-            }
         }
 
-        /* Для мобильных — переворот без сдвига */
         @media (max-width: 1023px) {
             .page.flipped {
                 transform: rotateY(-180deg);
             }
         }
 
-        /* Оформление комиксов */
         .comic-frame {
             border: 4px solid #1f1f2b;
             border-radius: 12px;
@@ -143,7 +132,6 @@
             letter-spacing: 0.3px;
         }
 
-        /* Нумерация */
         .page-badge {
             position: absolute;
             bottom: 10px;
@@ -160,7 +148,6 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
 
-        /* Титульная страница */
         .title-page {
             background: linear-gradient(135deg, #3b8cff, #00c9ff);
         }
@@ -203,7 +190,6 @@
             color: #1f2c46;
         }
 
-        /* Задняя обложка */
         .back-cover {
             background: radial-gradient(circle at 20% 30%, #a180cf, #5f3b8c);
         }
@@ -223,7 +209,6 @@
             color: #331d4a;
         }
 
-        /* Подсказка для удобства */
         .nav-hint {
             position: fixed;
             bottom: 18px;
@@ -260,247 +245,324 @@
 
     <div class="book-container">
         <div class="book" id="book">
-            <!-- СТРАНИЦА 1: титул -->
+
             <div class="page title-page" data-page="0">
                 <div class="comic-frame">
                     <div class="text-bubble">
                         <div class="main-title">📖 КАК ЖИЛА АНЯ<br>или СДРАОЛ! 🎈</div>
                         <div class="sub-author">✨ автор: лучший друг ✨</div>
                     </div>
-                    <div class="page-badge">1 / 11</div>
+                    <div class="page-badge">1 / 25</div>
                 </div>
             </div>
 
-            <!-- СТРАНИЦА 2 -->
             <div class="page" data-page="1">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/nYovnbO.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        🌙 6:00. В данной комнате еще тихо, Аня спит.
+                        🌙 6:00. В комнате ещё тихо, Аня сладко спит.
                     </div>
-                    <div class="page-badge">2 / 11</div>
+                    <div class="page-badge">2 / 25</div>
                 </div>
             </div>
 
-            <!-- СТРАНИЦА 3 -->
             <div class="page" data-page="2">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/teaByyk.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        🌤️ 7:00. Аня потихоньку просыпается
+                        🌤️ 7:00. Аня потихоньку просыпается и сладко потягивается.
                     </div>
-                    <div class="page-badge">3 / 11</div>
+                    <div class="page-badge">3 / 25</div>
                 </div>
             </div>
 
-            <!-- СТРАНИЦА 4 -->
             <div class="page" data-page="3">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/A5xVmmW.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        🥞 7:15. Быстрее бежим завтракать! ☕
+                        🥞 7:15. Быстрее бежим завтракать! Ароматные блинчики ждут.
                     </div>
-                    <div class="page-badge">4 / 11</div>
+                    <div class="page-badge">4 / 25</div>
                 </div>
             </div>
 
-            <!-- СТРАНИЦА 5 -->
             <div class="page" data-page="4">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/RaqNL3k.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
                         🚀 09:15 — Дорога. Максимально серьезная и деловая Аня пошла покорять этот мир. 💼
                     </div>
-                    <div class="page-badge">5 / 11</div>
+                    <div class="page-badge">5 / 25</div>
                 </div>
             </div>
 
-            <!-- СТРАНИЦА 6 -->
             <div class="page" data-page="5">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/pc2qVIT.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        😂 12:00 — Тот самый момент среди дня, когда тебе прислали угарный мем в рабочий чат!
+                        😂 12:00 — Тот самый момент, когда в рабочий чат прислали угарный мем!
                     </div>
-                    <div class="page-badge">6 / 11</div>
+                    <div class="page-badge">6 / 25</div>
                 </div>
             </div>
 
-            <!-- СТРАНИЦА 7 -->
             <div class="page" data-page="6">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/TDtQgUI.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        🍕 14:00 — Обееед! Время для твоей любимой пиццы, роллов или чего-нибудь очень вкусного 🍣
+                        🍕 14:00 — Обед! Время для любимой пиццы, роллов или чего-то очень вкусного 🍣
                     </div>
-                    <div class="page-badge">7 / 11</div>
+                    <div class="page-badge">7 / 25</div>
                 </div>
             </div>
 
-            <!-- СТРАНИЦА 8 -->
             <div class="page" data-page="7">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/fCntIsa.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        💬 16:30 — Время для главных сплетен, важных историй и очень эмоциональных рассказов руками! ✨
+                        💬 16:30 — Время для главных сплетен, важных историй и эмоциональных рассказов руками! ✨
                     </div>
-                    <div class="page-badge">8 / 11</div>
+                    <div class="page-badge">8 / 25</div>
                 </div>
             </div>
 
-            <!-- СТРАНИЦА 9 -->
             <div class="page" data-page="8">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/xdbeCCd.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        💃 19:00 — Включаются твои фирменные танцы, которые знают и любят абсолютно все вокруг! 🎶
+                        💃 19:00 — Включаются твои фирменные танцы, которые обожают все вокруг! 🎶
                     </div>
-                    <div class="page-badge">9 / 11</div>
+                    <div class="page-badge">9 / 25</div>
                 </div>
             </div>
 
-            <!-- СТРАНИЦА 10 -->
             <div class="page" data-page="9">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/VnyuG83.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        🌙 22:00 — Уставшие, но самые счастливые под конец этого дня. Теперь можно и отдохнуть! 🛋️
+                        🌙 22:00 — Уставшие, но счастливые. День удался на славу!
                     </div>
-                    <div class="page-badge">10 / 11</div>
+                    <div class="page-badge">10 / 25</div>
                 </div>
             </div>
 
-            <!-- СТРАНИЦА 11: финал -->
-            <div class="page back-cover" data-page="10">
+            <div class="page" data-page="10">
+                <div class="comic-frame">
+                    <div class="photo" style="background-image: url('https://i.imgur.com/nYovnbO.png'); background-size: cover; background-position: center;"></div>
+                    <div class="text-bubble">
+                        🛁 Утро субботы — расслабляющая ванна с пеной и любимая музыка.
+                    </div>
+                    <div class="page-badge">11 / 25</div>
+                </div>
+            </div>
+
+            <div class="page" data-page="11">
+                <div class="comic-frame">
+                    <div class="photo" style="background-image: url('https://i.imgur.com/teaByyk.png'); background-size: cover; background-position: center;"></div>
+                    <div class="text-bubble">
+                        📚 11:00 — Чтение интересной книги с чашечкой какао.
+                    </div>
+                    <div class="page-badge">12 / 25</div>
+                </div>
+            </div>
+
+            <div class="page" data-page="12">
+                <div class="comic-frame">
+                    <div class="photo" style="background-image: url('https://i.imgur.com/A5xVmmW.png'); background-size: cover; background-position: center;"></div>
+                    <div class="text-bubble">
+                        🛍️ 13:00 — Прогулка по любимым магазинам и милые находки.
+                    </div>
+                    <div class="page-badge">13 / 25</div>
+                </div>
+            </div>
+
+            <div class="page" data-page="13">
+                <div class="comic-frame">
+                    <div class="photo" style="background-image: url('https://i.imgur.com/RaqNL3k.png'); background-size: cover; background-position: center;"></div>
+                    <div class="text-bubble">
+                        ☕ 15:30 — Встреча с подругами в уютной кофейне, секреты и смех.
+                    </div>
+                    <div class="page-badge">14 / 25</div>
+                </div>
+            </div>
+
+            <div class="page" data-page="14">
+                <div class="comic-frame">
+                    <div class="photo" style="background-image: url('https://i.imgur.com/pc2qVIT.png'); background-size: cover; background-position: center;"></div>
+                    <div class="text-bubble">
+                        🎨 17:00 — Творчество: Аня рисует яркий закат акварелью.
+                    </div>
+                    <div class="page-badge">15 / 25</div>
+                </div>
+            </div>
+
+            <div class="page" data-page="15">
+                <div class="comic-frame">
+                    <div class="photo" style="background-image: url('https://i.imgur.com/TDtQgUI.png'); background-size: cover; background-position: center;"></div>
+                    <div class="text-bubble">
+                        🍜 19:30 — Готовит ужин по новому рецепту — получается шедевр!
+                    </div>
+                    <div class="page-badge">16 / 25</div>
+                </div>
+            </div>
+
+            <div class="page" data-page="16">
+                <div class="comic-frame">
+                    <div class="photo" style="background-image: url('https://i.imgur.com/fCntIsa.png'); background-size: cover; background-position: center;"></div>
+                    <div class="text-bubble">
+                        📸 21:00 — Серия забавных селфи с котом и отправка лучшим друзьям.
+                    </div>
+                    <div class="page-badge">17 / 25</div>
+                </div>
+            </div>
+
+            <div class="page" data-page="17">
+                <div class="comic-frame">
+                    <div class="photo" style="background-image: url('https://i.imgur.com/xdbeCCd.png'); background-size: cover; background-position: center;"></div>
+                    <div class="text-bubble">
+                        🎬 22:30 — Вечерний просмотр любимого фильма под пледом.
+                    </div>
+                    <div class="page-badge">18 / 25</div>
+                </div>
+            </div>
+
+            <div class="page" data-page="18">
+                <div class="comic-frame">
+                    <div class="photo" style="background-image: url('https://i.imgur.com/VnyuG83.png'); background-size: cover; background-position: center;"></div>
+                    <div class="text-bubble">
+                        🌟 Воскресное утро: неспешный завтрак и планы на день.
+                    </div>
+                    <div class="page-badge">19 / 25</div>
+                </div>
+            </div>
+
+            <div class="page" data-page="19">
+                <div class="comic-frame">
+                    <div class="photo" style="background-image: url('https://i.imgur.com/nYovnbO.png'); background-size: cover; background-position: center;"></div>
+                    <div class="text-bubble">
+                        🧘‍♀️ 10:00 — Йога и медитация для хорошего настроения.
+                    </div>
+                    <div class="page-badge">20 / 25</div>
+                </div>
+            </div>
+
+            <div class="page" data-page="20">
+                <div class="comic-frame">
+                    <div class="photo" style="background-image: url('https://i.imgur.com/teaByyk.png'); background-size: cover; background-position: center;"></div>
+                    <div class="text-bubble">
+                        🌳 12:00 — Прогулка в парке, кормление уточек и свежий воздух.
+                    </div>
+                    <div class="page-badge">21 / 25</div>
+                </div>
+            </div>
+
+            <div class="page" data-page="21">
+                <div class="comic-frame">
+                    <div class="photo" style="background-image: url('https://i.imgur.com/A5xVmmW.png'); background-size: cover; background-position: center;"></div>
+                    <div class="text-bubble">
+                        🎂 15:00 — Маленький праздник: кекс с чаем и поздравления.
+                    </div>
+                    <div class="page-badge">22 / 25</div>
+                </div>
+            </div>
+
+            <div class="page" data-page="22">
+                <div class="comic-frame">
+                    <div class="photo" style="background-image: url('https://i.imgur.com/RaqNL3k.png'); background-size: cover; background-position: center;"></div>
+                    <div class="text-bubble">
+                        ✨ Время мечтать: Аня строит планы на большое путешествие.
+                    </div>
+                    <div class="page-badge">23 / 25</div>
+                </div>
+            </div>
+
+            <div class="page" data-page="23">
+                <div class="comic-frame">
+                    <div class="photo" style="background-image: url('https://i.imgur.com/pc2qVIT.png'); background-size: cover; background-position: center;"></div>
+                    <div class="text-bubble">
+                        💌 18:00 — Пишет открытки друзьям, дарит тепло и улыбки.
+                    </div>
+                    <div class="page-badge">24 / 25</div>
+                </div>
+            </div>
+
+            <div class="page back-cover" data-page="24">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/XZUTQGR.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
                         🎉 С ДНЕМ РОЖДЕНИЯ, АНЯ! 🎂<br>Наша история продолжается... 💖
                     </div>
-                    <div class="page-badge">11 / 11</div>
+                    <div class="page-badge">25 / 25</div>
                 </div>
             </div>
+
         </div>
     </div>
     <div class="nav-hint">📖 ← Листай влево / вправо →</div>
 
     <script>
         (function() {
-            // Получаем все страницы
             const pages = Array.from(document.querySelectorAll('.page'));
             const totalPages = pages.length;
             const flipSound = document.getElementById('flipSound');
+            let turnedCount = 0;
             
-            // Текущая позиция — сколько страниц перевернуто (индекс первой неперевернутой страницы)
-            // Изначально перевернуто 0 страниц, первая страница видима.
-            let turnedCount = 0;   // количество страниц, получивших класс 'flipped'
-            
-            // Инициализация z-index: все страницы получают zIndex в порядке убывания, чтобы первая была сверху
-            function initZindex() {
-                // наложение: индекс страницы 0 (первая) самый высокий zIndex
-                for (let i = 0; i < pages.length; i++) {
-                    // чем меньше i, тем выше должен быть слой
-                    pages[i].style.zIndex = (pages.length - i);
-                    // Убедимся что класс flipped выставлен корректно (по умолчанию все не перевернуты)
-                    if (turnedCount > 0 && i < turnedCount) {
-                        pages[i].classList.add('flipped');
-                    } else {
-                        pages[i].classList.remove('flipped');
-                    }
-                }
-            }
-            
-            // Воспроизведение звука с защитой от ошибок автополитики (но звук будет после клика)
             function playFlip() {
                 if (flipSound) {
                     flipSound.currentTime = 0;
                     const playPromise = flipSound.play();
                     if (playPromise !== undefined) {
-                        playPromise.catch(e => {
-                            // тихо игнорируем если браузер блокирует авто-звук, в любом случае страница интерактивна
-                            console.log("audio play blocked, user interaction needed");
-                        });
+                        playPromise.catch(e => {});
                     }
                 }
             }
             
-            // Обновить визуальное состояние в зависимости от turnedCount
-            function updatePagesState(animate = true) {
-                // Для каждой страницы: если её индекс < turnedCount => она должна быть flipped, иначе нет
+            function updatePagesState() {
                 for (let i = 0; i < pages.length; i++) {
                     const shouldBeFlipped = (i < turnedCount);
-                    const isFlipped = pages[i].classList.contains('flipped');
-                    if (shouldBeFlipped !== isFlipped) {
-                        if (shouldBeFlipped) {
-                            pages[i].classList.add('flipped');
-                        } else {
-                            pages[i].classList.remove('flipped');
-                        }
-                    }
-                    // z-index настраиваем: перевернутые страницы получают низкий приоритет, а текущая "верхняя" (не перевернутая) должна быть выше
-                    // Логика: все flipped страницы должны быть ниже, чем неперевернутые.
-                    // Неперевернутая страница с наименьшим индексом (самая левая) должна быть сверху.
                     if (shouldBeFlipped) {
-                        // перевернутая — убираем на задний план (низкий z-index)
-                        pages[i].style.zIndex = i + 1;   // небольшое значение, не мешает
+                        pages[i].classList.add('flipped');
                     } else {
-                        // Неперевернутая страница. Чем меньше индекс неперевернутой, тем выше z-index.
-                        // Важно: текущая отображаемая страница это pages[turnedCount]
-                        const priority = pages.length - i;
-                        pages[i].style.zIndex = priority;
+                        pages[i].classList.remove('flipped');
+                    }
+                    if (shouldBeFlipped) {
+                        pages[i].style.zIndex = i + 1;
+                    } else {
+                        pages[i].style.zIndex = pages.length - i;
                     }
                 }
-                // Дополнительная гарантия: последняя неперевернутая страница должна быть сверху.
                 if (turnedCount < pages.length) {
-                    const currentVisibleIdx = turnedCount;
-                    pages[currentVisibleIdx].style.zIndex = pages.length + 5;
+                    pages[turnedCount].style.zIndex = pages.length + 5;
                 }
             }
             
-            // Листание вперед (следующая страница)
             function nextPage() {
                 if (turnedCount < totalPages - 1) {
                     turnedCount++;
-                    updatePagesState(true);
+                    updatePagesState();
                     playFlip();
                     return true;
                 }
                 return false;
             }
             
-            // Листание назад (предыдущая страница)
             function prevPage() {
                 if (turnedCount > 0) {
                     turnedCount--;
-                    updatePagesState(true);
+                    updatePagesState();
                     playFlip();
                     return true;
                 }
                 return false;
             }
             
-            // Определение клика по области (левая/правая половина) с учетом ширины контейнера и десктопной верстки
             function handleBookClick(event) {
-                const bookElement = document.getElementById('book');
-                const rect = bookElement.getBoundingClientRect();
-                // Определяем координату клика относительно левого края book
-                let clickX = event.clientX - rect.left;
-                // Для десктопного режима (min-width:1024px) книга имеет ширину 200% родителя, но контейнер book-container ограничивает.
-                // Однако нам важен относительный клик по видимой области. rect.width - это ширина book в окне (видимая часть)
-                // на десктопе из-за transform: translateX(25%) ширина book получается большой, но важна визуальная часть.
-                // Правильнее всего считать половину от ВИДИМОЙ области самого контейнера, но пользователь кликает по странице.
-                // Лучше взять ширину book-container, которая визуально показывает книгу.
                 const container = document.querySelector('.book-container');
                 const containerRect = container.getBoundingClientRect();
-                // нормализуем: клик относительно контейнера
                 let relativeX = event.clientX - containerRect.left;
                 const containerWidth = containerRect.width;
-                
-                // Ещё более надёжно: если клик пришелся на элемент .page, то определяем сторону по визуальной половине.
-                // Но для единообразия используем половину containerWidth.
                 const isRightSide = (relativeX > containerWidth / 2);
                 
-                // Вперед (следующая страница) если клик справа, назад если слева
                 if (isRightSide) {
                     nextPage();
                 } else {
@@ -508,41 +570,32 @@
                 }
             }
             
-            // Инициализация состояний: сброс класса перелистывания в изначальное
             function resetToFirstPage() {
                 turnedCount = 0;
-                updatePagesState(false);
-                // Убедимся, что на маленьких экранах и больших всё корректно без артефактов
+                updatePagesState();
             }
             
-            // Привязка события клика к книге
             const bookDiv = document.getElementById('book');
             if (bookDiv) {
-                // очищаем старые обработчики (если есть)
                 bookDiv.removeEventListener('click', handleBookClick);
                 bookDiv.addEventListener('click', handleBookClick);
             }
             
-            // Дополнительно: обработка для поддержки сенсоров (touch), чтобы предотвратить случайное выделение
-            bookDiv.addEventListener('touchstart', (e) => {
-                // не блокируем, просто разрешаем клик
-            }, { passive: false });
-            
-            // Инициализация z-index и страниц
-            resetToFirstPage();
-            
-            // Если страницы выстроены, дополнительно убедимся, что первая страница не имеет флипа и z-index максимальный
-            window.addEventListener('resize', () => {
-                // при изменении размера экрана обновить трансформации чтобы не было глитчей
-                updatePagesState(false);
+            bookDiv.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                return false;
             });
             
-            // Легкий фикс для десктопа: если вдруг z-index кривой, перевыставить через секунду
+            resetToFirstPage();
+            
+            window.addEventListener('resize', () => {
+                updatePagesState();
+            });
+            
             setTimeout(() => {
-                updatePagesState(false);
+                updatePagesState();
             }, 100);
             
-            // Обработка стрелок клавиатуры для удобства (дополнительная фишка)
             window.addEventListener('keydown', (e) => {
                 if (e.key === 'ArrowRight') {
                     e.preventDefault();
@@ -552,17 +605,6 @@
                     prevPage();
                 }
             });
-            
-            // Убираем потенциальный конфликт с контекстным меню (правой кнопкой мыши) - не мешаем листанию
-            bookDiv.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                return false;
-            });
-            
-            // Для десктопных пользователей - фикс, когда клик по странице работает чётко по областям,
-            // перепроверим, что событие не перехватывается дочерними элементами, но наш обработчик на book срабатывает всегда.
-            // Также на случай если захочется нажать на badge или текст - листание работает.
-            console.log("Комикс готов! Кликай справа -> вперёд, слева <- назад (на компьютере тоже).");
         })();
     </script>
 </body>
