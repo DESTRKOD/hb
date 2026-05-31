@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Комикс для Ани! 📖</title>
+    <title>Комикс для Ани! 📖 Плавные страницы</title>
     <style>
         :root {
             --bg-image: url('https://i.imgur.com/PF0ZvT7.jpeg');
             --page-bg: #fffdf0;
             --text-color: #111;
         }
-
         * {
             box-sizing: border-box;
             margin: 0;
@@ -19,7 +18,6 @@
             user-select: none;
             touch-action: manipulation;
         }
-
         html, body {
             position: fixed;
             top: 0;
@@ -28,37 +26,32 @@
             height: 100%;
             overflow: hidden;
         }
-
         body {
             background-image: linear-gradient(rgba(30, 30, 36, 0.9), rgba(30, 30, 36, 0.9)), var(--bg-image);
             background-size: cover;
             background-position: center;
-            background-attachment: fixed;
             font-family: 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
         }
-
         .book-container {
             position: relative;
             width: 100%;
             max-width: 400px;
             height: 80vh;
             max-height: 680px;
-            perspective: 2000px;
+            perspective: 3000px;
             overflow: hidden;
-            touch-action: pan-y pinch-zoom;
+            border-radius: 12px;
         }
-
         .book {
             position: relative;
             width: 100%;
             height: 100%;
             transform-style: preserve-3d;
         }
-
         .page {
             position: absolute;
             width: 100%;
@@ -66,20 +59,21 @@
             top: 0;
             left: 0;
             background-color: var(--page-bg);
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-radius: 8px;
             transform-origin: left center;
-            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: 
+                transform 1.15s cubic-bezier(0.645, 0.045, 0.355, 1),
+                box-shadow 1.15s cubic-bezier(0.645, 0.045, 0.355, 1);
             transform-style: preserve-3d;
             backface-visibility: hidden;
             overflow: hidden;
-            padding: 0;
+            box-shadow: -4px 8px 18px rgba(0, 0, 0, 0.18);
+            will-change: transform, box-shadow;
         }
-
         .page.flipped {
             transform: rotateY(-180deg);
+            box-shadow: 12px 8px 28px rgba(0, 0, 0, 0.35);
         }
-
         @media (min-width: 1024px) {
             .book-container {
                 max-width: 900px;
@@ -94,6 +88,7 @@
             }
             .page.flipped {
                 transform: rotateY(-180deg) translateX(100%);
+                box-shadow: 18px 12px 32px rgba(0, 0, 0, 0.32);
             }
         }
 
@@ -107,7 +102,6 @@
             background: #fff;
             position: relative;
         }
-
         .photo {
             flex: 1.3;
             background-size: cover;
@@ -116,7 +110,6 @@
             background-color: #fcfcfc;
             border-bottom: 4px solid #000;
         }
-
         .text-bubble {
             flex: 0.7;
             padding: 15px;
@@ -130,7 +123,6 @@
             align-items: center;
             justify-content: center;
         }
-
         .page-badge {
             position: absolute;
             bottom: 8px;
@@ -141,9 +133,9 @@
             font-size: 12px;
             border-radius: 20px;
             font-weight: bold;
-            z-index: 10;
+            z-index: 20;
+            pointer-events: none;
         }
-
         .title-page {
             background: linear-gradient(135deg, #4facfe, #00f2fe);
         }
@@ -178,12 +170,10 @@
             background: #fff;
             color: #000;
         }
-
         .big-text-page .text-bubble {
             font-size: 24px;
             line-height: 1.5;
         }
-
         .text-only-page .photo {
             display: none;
         }
@@ -196,7 +186,6 @@
             line-height: 1.5;
             padding: 20px;
         }
-
         .video-page .video-container {
             flex: 1.3;
             background: #000;
@@ -207,13 +196,11 @@
             overflow: hidden;
             border-bottom: 4px solid #000;
         }
-
         .video-page .video-container video {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-
         .video-page .play-btn {
             position: absolute;
             background: rgba(0,0,0,0.75);
@@ -229,431 +216,360 @@
             backdrop-filter: blur(5px);
             transition: 0.2s;
         }
-
         .video-page .play-btn:hover {
             background: rgba(0,0,0,0.9);
             transform: scale(1.02);
         }
+        .text-bubble, .photo {
+            transition: opacity 0.2s ease;
+        }
     </style>
 </head>
 <body>
-
-    <div class="book-container">
-        <div class="book" id="book">
-
-            <div class="page title-page">
-                <div class="comic-frame">
-                    <div class="text-bubble">
-                        <div class="main-title">КАК ЖИЛА АНЯ<br>или СДРАОЛ!</div>
-                        <div class="sub-author">автор: лучший друг</div>
-                    </div>
-                    <div class="page-badge">1 / 35</div>
+<div class="book-container">
+    <div class="book" id="book">
+        <div class="page title-page">
+            <div class="comic-frame">
+                <div class="text-bubble">
+                    <div class="main-title">КАК ЖИЛА АНЯ<br>или СДРАОЛ!</div>
+                    <div class="sub-author">автор: лучший друг</div>
                 </div>
+                <div class="page-badge">1 / 35</div>
             </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/nYovnbO.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        6:00. В данной комнате еще тихо, Аня спит.
-                    </div>
-                    <div class="page-badge">2 / 35</div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/nYovnbO.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">6:00. В данной комнате еще тихо, Аня спит.</div>
+                <div class="page-badge">2 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/teaByyk.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">7:00. Аня потихоньку просыпается</div>
+                <div class="page-badge">3 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/A5xVmmW.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">7:15. Быстрее бежим завтракать.</div>
+                <div class="page-badge">4 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/RaqNL3k.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">7:30. Время одеваться и выходить</div>
+                <div class="page-badge">5 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/pc2qVIT.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">Рано вам пока такое смотреть.</div>
+                <div class="page-badge">6 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/TDtQgUI.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">Ну вот и все. можно выходить</div>
+                <div class="page-badge">7 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/fCntIsa.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">Радостная (или нет(с окна не видно)) идет Аня в школу</div>
+                <div class="page-badge">8 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/xdbeCCd.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">Кайф, поезд ушел прямо перед носом, спасибо</div>
+                <div class="page-badge">9 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/VnyuG83.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">Ну с другой стороны в этом поезде хотя бы места есть</div>
+                <div class="page-badge">10 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/XZUTQGR.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">Самое время написать своему кумиру. Так волнительно..</div>
+                <div class="page-badge">11 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/1W2UUB8.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">да да, в автобусе он едет, конечно</div>
+                <div class="page-badge">12 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/A5xVmmW.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">ОМАГАД ЧТООООО!?</div>
+                <div class="page-badge">13 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/RaqNL3k.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">ОМАГАД ЧТООООО?!</div>
+                <div class="page-badge">14 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/pc2qVIT.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">Пока лучшие друзья тихо неспеша идут в школу, нужно ответить на вопрос, че он такой красный как ярик? Ну тут все просто, отвык от подобного вида приветствия</div>
+                <div class="page-badge">15 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/TDtQgUI.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">Добро пожаловать в родную школу (зачем пришли, если лето? ну консультации, че поделать)</div>
+                <div class="page-badge">16 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/fCntIsa.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">А вот и Лиза с Лешей. Алексеи идут на информатику, Лиза и Аня на английский</div>
+                <div class="page-badge">17 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/xdbeCCd.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">Отсидев занятия, друзья идут играть на рояле (зачем? а че бы нет)</div>
+                <div class="page-badge">18 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/VnyuG83.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">Немного поиграв, данная компания принимает решение идти домой</div>
+                <div class="page-badge">19 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/nYovnbO.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">Аня (как всегда) уходит вместе с Лизой, а Леша решил остаться в мужской (еееее) компании и идти домой вместе с Лешей (ну который Ч, если вы не поняли)</div>
+                <div class="page-badge">20 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/teaByyk.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">Вот, наконец, Аня дома. Чтобы снять усталость, первым делом, она идет в душ</div>
+                <div class="page-badge">21 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/A5xVmmW.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">Здесь без фоток (не плачьте)</div>
+                <div class="page-badge">22 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/RaqNL3k.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">С новыми силами Аня идет смотреть тикток (ну и варить пельмени, как же без этого)</div>
+                <div class="page-badge">23 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/pc2qVIT.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">Устав от тиктока, Аня идет в свою (ну и, конечно, Саввину) комнату, смотреть тикток (не спрашивайте.)</div>
+                <div class="page-badge">24 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/TDtQgUI.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">Какой дурак там орет?</div>
+                <div class="page-badge">25 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/fCntIsa.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">А этот че опять приперся?</div>
+                <div class="page-badge">26 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/xdbeCCd.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">ой</div>
+                <div class="page-badge">27 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/VnyuG83.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">УРАААА! ОН ПРИШЕЛ!!</div>
+                <div class="page-badge">28 / 35</div>
+            </div>
+        </div>
+        <div class="page video-page">
+            <div class="comic-frame">
+                <div class="video-container" id="videoContainer29">
+                    <video id="birthdayVideo29" poster="https://i.imgur.com/XZUTQGR.png" preload="auto" playsinline>
+                        <source src="https://res.cloudinary.com/dsd6n5bvj/video/upload/v1780259622/iwannadance_xl1xw2.mp4" type="video/mp4">
+                        Твой браузер не поддерживает видео.
+                    </video>
+                    <button class="play-btn" id="playVideoBtn29">▶ НАЖМИ, ЧТОБЫ СМОТРЕТЬ СО ЗВУКОМ</button>
                 </div>
+                <div class="text-bubble">🎥 СЮРПРИЗ! Смотри до конца 💙</div>
+                <div class="page-badge">29 / 35</div>
             </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/teaByyk.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        7:00. Аня потихоньку просыпается
-                    </div>
-                    <div class="page-badge">3 / 35</div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/teaByyk.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">Сладких снов, наша супер-Аня! 🌙</div>
+                <div class="page-badge">30 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/A5xVmmW.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">Новый день — новые приключения ждут!</div>
+                <div class="page-badge">31 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/RaqNL3k.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">Спасибо за этот день, он был особенным!</div>
+                <div class="page-badge">32 / 35</div>
+            </div>
+        </div>
+        <div class="page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/pc2qVIT.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">Ты самая лучшая, Аня! ❤️</div>
+                <div class="page-badge">33 / 35</div>
+            </div>
+        </div>
+        <div class="page big-text-page">
+            <div class="comic-frame">
+                <div class="photo" style="background-image: url('https://i.imgur.com/XZUTQGR.png'); background-size: cover; background-position: center;"></div>
+                <div class="text-bubble">🎉 С ДНЁМ РОЖДЕНИЯ, АНЯ! 🎉</div>
+                <div class="page-badge">34 / 35</div>
+            </div>
+        </div>
+        <div class="page text-only-page">
+            <div class="comic-frame">
+                <div class="text-bubble">
+                    💖 Дорогая Аня! 💖<br><br>
+                    С днём рождения! Ты — самый яркий человек. Спасибо за твою улыбку, за твои бесконечные истории и эмоции. С тобой каждый день становится праздником.<br><br>
+                    Желаю тебе море счастья, океан любви, горы успеха и чтобы все твои мечты сбывались!<br><br>
+                    Оставайся такой же искренней и невероятной. Мы тебя очень любим!<br><br>
+                    Твой лучший друг 🤍
                 </div>
+                <div class="page-badge">35 / 35</div>
             </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/A5xVmmW.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        7:15. Быстрее бежим завтракать.
-                    </div>
-                    <div class="page-badge">4 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/RaqNL3k.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        7:30. Время одеваться и выходить
-                    </div>
-                    <div class="page-badge">5 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/pc2qVIT.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        Рано вам пока такое смотреть.
-                    </div>
-                    <div class="page-badge">6 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/TDtQgUI.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        Ну вот и все. можно выходить
-                    </div>
-                    <div class="page-badge">7 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/fCntIsa.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        Радостная (или нет(с окна не видно)) идет Аня в школу
-                    </div>
-                    <div class="page-badge">8 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/xdbeCCd.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        Кайф, поезд ушел прямо перед носом, спасибо
-                    </div>
-                    <div class="page-badge">9 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/VnyuG83.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        Ну с другой стороны в этом поезде хотя бы места есть
-                    </div>
-                    <div class="page-badge">10 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/XZUTQGR.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        Самое время написать своему кумиру. Так волнительно..
-                    </div>
-                    <div class="page-badge">11 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/1W2UUB8.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        да да, в автобусе он едет, конечно
-                    </div>
-                    <div class="page-badge">12 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/A5xVmmW.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        ОМАГАД ЧТООООО!?
-                    </div>
-                    <div class="page-badge">13 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/RaqNL3k.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        ОМАГАД ЧТООООО?!
-                    </div>
-                    <div class="page-badge">14 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/pc2qVIT.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        Пока лучшие друзья тихо неспеша идут в школу, нужно ответить на вопрос, че он такой красный как ярик? Ну тут все просто, отвык от подобного вида приветствия
-                    </div>
-                    <div class="page-badge">15 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/TDtQgUI.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        Добро пожаловать в родную школу (зачем пришли, если лето? ну консультации, че поделать)
-                    </div>
-                    <div class="page-badge">16 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/fCntIsa.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        А вот и Лиза с Лешей. Алексеи идут на информатику, Лиза и Аня на английский
-                    </div>
-                    <div class="page-badge">17 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/xdbeCCd.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        Отсидев занятия, друзья идут играть на рояле (зачем? а че бы нет)
-                    </div>
-                    <div class="page-badge">18 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/VnyuG83.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        Немного поиграв, данная компания принимает решение идти домой
-                    </div>
-                    <div class="page-badge">19 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/nYovnbO.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        Аня (как всегда) уходит вместе с Лизой, а Леша решил остаться в мужской (еееее) компании и идти домой вместе с Лешей (ну который Ч, если вы не поняли)
-                    </div>
-                    <div class="page-badge">20 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/teaByyk.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        Вот, наконец, Аня дома. Чтобы снять усталость, первым делом, она идет в душ 
-                    </div>
-                    <div class="page-badge">21 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/A5xVmmW.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        Здесь без фоток (не плачьте)
-                    </div>
-                    <div class="page-badge">22 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/RaqNL3k.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        С новыми силами Аня идет смотреть тикток (ну и варить пельмени, как же без этого)
-                    </div>
-                    <div class="page-badge">23 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/pc2qVIT.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        Устав от тиктока, Аня идет в свою (ну и, конечно, Саввину) комнату, смотреть тикток (не спрашивайте.)
-                    </div>
-                    <div class="page-badge">24 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/TDtQgUI.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        Какой дурак там орет?
-                    </div>
-                    <div class="page-badge">25 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/fCntIsa.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        А этот че опять приперся?
-                    </div>
-                    <div class="page-badge">26 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/xdbeCCd.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        ой
-                    </div>
-                    <div class="page-badge">27 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/VnyuG83.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        УРАААА! ОН ПРИШЕЛ!!
-                    </div>
-                    <div class="page-badge">28 / 35</div>
-                </div>
-            </div>
-
-            <div class="page video-page">
-                <div class="comic-frame">
-                    <div class="video-container" id="videoContainer29">
-                        <video id="birthdayVideo29" poster="https://i.imgur.com/XZUTQGR.png" preload="auto" playsinline>
-                            <source src="https://res.cloudinary.com/dsd6n5bvj/video/upload/v1780259622/iwannadance_xl1xw2.mp4" type="video/mp4">
-                            Твой браузер не поддерживает видео.
-                        </video>
-                        <button class="play-btn" id="playVideoBtn29">▶ НАЖМИ, ЧТОБЫ СМОТРЕТЬ СО ЗВУКОМ</button>
-                    </div>
-                    <div class="text-bubble">
-                        🎥 СЮРПРИЗ! Смотри до конца 💙
-                    </div>
-                    <div class="page-badge">29 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/teaByyk.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        Сладких снов, наша супер-Аня! 🌙
-                    </div>
-                    <div class="page-badge">30 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/A5xVmmW.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        Новый день — новые приключения ждут!
-                    </div>
-                    <div class="page-badge">31 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/RaqNL3k.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        Спасибо за этот день, он был особенным!
-                    </div>
-                    <div class="page-badge">32 / 35</div>
-                </div>
-            </div>
-
-            <div class="page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/pc2qVIT.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        Ты самая лучшая, Аня! ❤️
-                    </div>
-                    <div class="page-badge">33 / 35</div>
-                </div>
-            </div>
-
-            <div class="page big-text-page">
-                <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/XZUTQGR.png'); background-size: cover; background-position: center;"></div>
-                    <div class="text-bubble">
-                        🎉 С ДНЁМ РОЖДЕНИЯ, АНЯ! 🎉
-                    </div>
-                    <div class="page-badge">34 / 35</div>
-                </div>
-            </div>
-
-            <div class="page text-only-page">
-                <div class="comic-frame">
-                    <div class="text-bubble">
-                        💖 Дорогая Аня! 💖<br><br>
-                        С днём рождения! Ты — самый яркий человек. Спасибо за твою улыбку, за твои бесконечные истории и эмоции. С тобой каждый день становится праздником.<br><br>
-                        Желаю тебе море счастья, океан любви, горы успеха и чтобы все твои мечты сбывались!<br><br>
-                        Оставайся такой же искренней и невероятной. Мы тебя очень любим!<br><br>
-                        Твой лучший друг 🤍
-                    </div>
-                    <div class="page-badge">35 / 35</div>
-                </div>
-            </div>
-
         </div>
     </div>
+</div>
 
-    <script>
-        const pages = Array.from(document.querySelectorAll('.page'));
-        
-        pages.forEach((page, idx) => {
-            page.style.zIndex = pages.length - idx;
-        });
-        
-        let currentPageIndex = 0;
+<script>
+    const pages = Array.from(document.querySelectorAll('.page'));
+    let currentPageIndex = 0;
+    let isAnimating = false;
 
-        function handlePageClick(event) {
-            const targetPage = event.currentTarget;
-            const rect = targetPage.getBoundingClientRect();
-            const clickX = event.clientX - rect.left;
-            const pageWidth = rect.width;
-            
-            const isRightSide = clickX > pageWidth / 2;
-            
-            if (isRightSide) {
-                if (currentPageIndex < pages.length - 1) {
-                    pages[currentPageIndex].classList.add('flipped');
-                    pages[currentPageIndex].style.zIndex = currentPageIndex;
-                    currentPageIndex++;
-                }
+    // Главное исправление: полный пересчёт z-index после каждого перелистывания
+    function updateZIndices() {
+        pages.forEach((page, index) => {
+            if (index < currentPageIndex) {
+                // Уже перевернутые страницы — внизу стопки
+                page.style.zIndex = index + 1;
+                page.classList.add('flipped');
             } else {
-                if (currentPageIndex > 0) {
-                    currentPageIndex--;
-                    pages[currentPageIndex].classList.remove('flipped');
-                    pages[currentPageIndex].style.zIndex = pages.length - currentPageIndex;
-                }
+                // Текущая + следующие страницы — сверху
+                page.style.zIndex = pages.length - (index - currentPageIndex);
+                page.classList.remove('flipped');
             }
-        }
-
-        pages.forEach(page => {
-            page.addEventListener('click', handlePageClick);
         });
+    }
 
-        const video29 = document.getElementById('birthdayVideo29');
-        const playBtn29 = document.getElementById('playVideoBtn29');
+    function flipPage(forward) {
+        if (isAnimating) return;
 
-        if (playBtn29 && video29) {
-            playBtn29.addEventListener('click', (e) => {
-                e.stopPropagation();
-                video29.play();
-                playBtn29.style.display = 'none';
-            });
-            
-            video29.addEventListener('ended', () => {
-                playBtn29.style.display = 'flex';
-                playBtn29.textContent = '🔄 НАЖМИ, ЧТОБЫ ПОВТОРИТЬ';
-            });
+        if (forward) {
+            if (currentPageIndex >= pages.length - 1) return;
+
+            isAnimating = true;
+            const pageToFlip = pages[currentPageIndex];
+
+            // Поднимаем страницу максимально высоко перед анимацией
+            pageToFlip.style.zIndex = 9999;
+            void pageToFlip.offsetWidth; // force reflow
+
+            pageToFlip.classList.add('flipped');
+
+            // Ждём окончания анимации (transitionend — точнее, чем setTimeout)
+            const onEnd = (e) => {
+                if (e.propertyName === 'transform') {
+                    pageToFlip.removeEventListener('transitionend', onEnd);
+                    currentPageIndex++;
+                    updateZIndices();
+                    isAnimating = false;
+                }
+            };
+            pageToFlip.addEventListener('transitionend', onEnd);
+
+        } else {
+            // Листание назад (уже было отлично, но теперь тоже через updateZIndices)
+            if (currentPageIndex <= 0) return;
+            currentPageIndex--;
+            updateZIndices();
         }
-    </script>
+    }
+
+    // Клик по любой странице
+    pages.forEach(page => {
+        page.addEventListener('click', (event) => {
+            const rect = page.getBoundingClientRect();
+            const clickX = event.clientX - rect.left;
+            const isRightSide = clickX > rect.width / 2;
+            flipPage(isRightSide);
+        });
+    });
+
+    // Инициализация
+    updateZIndices();
+
+    // Видео на 29 странице
+    const video29 = document.getElementById('birthdayVideo29');
+    const playBtn29 = document.getElementById('playVideoBtn29');
+    if (playBtn29 && video29) {
+        playBtn29.addEventListener('click', (e) => {
+            e.stopPropagation();
+            video29.play();
+            playBtn29.style.display = 'none';
+        });
+        video29.addEventListener('ended', () => {
+            playBtn29.style.display = 'flex';
+            playBtn29.textContent = '🔄 НАЖМИ, ЧТОБЫ ПОВТОРИТЬ';
+        });
+    }
+</script>
 </body>
 </html>
