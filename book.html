@@ -169,31 +169,22 @@
             color: #000;
         }
 
-        .back-cover {
-            background: linear-gradient(135deg, #654ea3, #eaafc8);
-        }
-        .back-cover .comic-frame {
-            background: transparent;
-            border-color: #fff;
-        }
-        .back-cover .text-bubble {
-            background: transparent;
-            color: #fff;
-            font-size: 22px;
-        }
-        .back-cover .page-badge {
-            background: #fff;
-            color: #000;
+        .big-text-page .text-bubble {
+            font-size: 24px;
+            line-height: 1.5;
         }
 
-        .click-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 9999;
-            pointer-events: none;
+        .text-only-page .photo {
+            display: none;
+        }
+        .text-only-page .comic-frame {
+            justify-content: center;
+        }
+        .text-only-page .text-bubble {
+            flex: 1;
+            font-size: 16px;
+            line-height: 1.5;
+            padding: 20px;
         }
     </style>
 </head>
@@ -316,7 +307,7 @@
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/1W2UUB8.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                    да да, автобусе он едет, конечно
+                        да да, в автобусе он едет, конечно
                     </div>
                     <div class="page-badge">12 / 35</div>
                 </div>
@@ -406,7 +397,7 @@
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/teaByyk.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        22:30. Планы на завтра — и снова мечты ✨
+                        Вот, наконец, Аня дома. Чтобы снять усталость, первым делом, она идет в душ 
                     </div>
                     <div class="page-badge">21 / 35</div>
                 </div>
@@ -416,7 +407,7 @@
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/A5xVmmW.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        Вот, наконец, Аня дома. Чтобы снять усталость, первым делом, она идет в душ 
+                        Здесь без фоток (не плачьте)
                     </div>
                     <div class="page-badge">22 / 35</div>
                 </div>
@@ -426,7 +417,7 @@
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/RaqNL3k.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        Здесь без фоток (не плачьте)
+                        С новыми силами Аня идет смотреть тикток (ну и варить пельмени, как же без этого)
                     </div>
                     <div class="page-badge">23 / 35</div>
                 </div>
@@ -436,17 +427,17 @@
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/pc2qVIT.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        С новыми силами Аня идет смотреть тикток (ну и варить пельмени, как же без этого)
+                        Устав от тиктока, Аня идет в свою (ну и, конечно, Саввину) комнату, смотреть тикток (не спрашивайте.)
                     </div>
                     <div class="page-badge">24 / 35</div>
                 </div>
             </div>
 
-            <div class="page back-cover">
+            <div class="page">
                 <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/XZUTQGR.png'); background-size: cover; background-position: center;"></div>
+                    <div class="photo" style="background-image: url('https://i.imgur.com/TDtQgUI.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        Устав от тиктока, Аня идет в свою (ну и, конечно, Саввину) комнату, смотреть тикток (не спрашивайте.)
+                        Какой дурак там орет?
                     </div>
                     <div class="page-badge">25 / 35</div>
                 </div>
@@ -454,9 +445,9 @@
 
             <div class="page">
                 <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/pc2qVIT.png'); background-size: cover; background-position: center;"></div>
+                    <div class="photo" style="background-image: url('https://i.imgur.com/fCntIsa.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        Какой дурак там орет?
+                        А этот че опять приперся?
                     </div>
                     <div class="page-badge">26 / 35</div>
                 </div>
@@ -464,9 +455,9 @@
 
             <div class="page">
                 <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/pc2qVIT.png'); background-size: cover; background-position: center;"></div>
+                    <div class="photo" style="background-image: url('https://i.imgur.com/xdbeCCd.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        А этот че опять приперся?
+                        ой
                     </div>
                     <div class="page-badge">27 / 35</div>
                 </div>
@@ -474,9 +465,9 @@
 
             <div class="page">
                 <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/pc2qVIT.png'); background-size: cover; background-position: center;"></div>
+                    <div class="photo" style="background-image: url('https://i.imgur.com/VnyuG83.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        ой
+                        УРАААА! ОН ПРИШЕЛ!!
                     </div>
                     <div class="page-badge">28 / 35</div>
                 </div>
@@ -484,11 +475,74 @@
 
             <div class="page">
                 <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/pc2qVIT.png'); background-size: cover; background-position: center;"></div>
+                    <div class="photo" style="background-image: url('https://i.imgur.com/nYovnbO.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        УРАААА! ОН ПРИШЕЛ!!
+                        22:30. Планы на завтра — и снова мечты ✨
                     </div>
                     <div class="page-badge">29 / 35</div>
+                </div>
+            </div>
+
+            <div class="page">
+                <div class="comic-frame">
+                    <div class="photo" style="background-image: url('https://i.imgur.com/teaByyk.png'); background-size: cover; background-position: center;"></div>
+                    <div class="text-bubble">
+                        Сладких снов, наша супер-Аня! 🌙
+                    </div>
+                    <div class="page-badge">30 / 35</div>
+                </div>
+            </div>
+
+            <div class="page">
+                <div class="comic-frame">
+                    <div class="photo" style="background-image: url('https://i.imgur.com/A5xVmmW.png'); background-size: cover; background-position: center;"></div>
+                    <div class="text-bubble">
+                        Новый день — новые приключения ждут!
+                    </div>
+                    <div class="page-badge">31 / 35</div>
+                </div>
+            </div>
+
+            <div class="page">
+                <div class="comic-frame">
+                    <div class="photo" style="background-image: url('https://i.imgur.com/RaqNL3k.png'); background-size: cover; background-position: center;"></div>
+                    <div class="text-bubble">
+                        Спасибо за этот день, он был особенным!
+                    </div>
+                    <div class="page-badge">32 / 35</div>
+                </div>
+            </div>
+
+            <div class="page">
+                <div class="comic-frame">
+                    <div class="photo" style="background-image: url('https://i.imgur.com/pc2qVIT.png'); background-size: cover; background-position: center;"></div>
+                    <div class="text-bubble">
+                        Ты самая лучшая, Аня! ❤️
+                    </div>
+                    <div class="page-badge">33 / 35</div>
+                </div>
+            </div>
+
+            <div class="page big-text-page">
+                <div class="comic-frame">
+                    <div class="photo" style="background-image: url('https://i.imgur.com/XZUTQGR.png'); background-size: cover; background-position: center;"></div>
+                    <div class="text-bubble">
+                        🎉 С ДНЁМ РОЖДЕНИЯ, АНЯ! 🎉
+                    </div>
+                    <div class="page-badge">34 / 35</div>
+                </div>
+            </div>
+
+            <div class="page text-only-page">
+                <div class="comic-frame">
+                    <div class="text-bubble">
+                        💖 Дорогая Аня! 💖<br><br>
+                        С днём рождения! Ты — самый яркий человек в нашей жизни. Спасибо тебе за твою улыбку, за твои танцы, за твои бесконечные истории и эмоции. С тобой каждый день становится праздником.<br><br>
+                        Желаю тебе море счастья, океан любви, горы успеха и чтобы все твои мечты сбывались!<br><br>
+                        Оставайся такой же искренней, весёлой и невероятной. Мы тебя очень любим!<br><br>
+                        Твой лучший друг 🤍
+                    </div>
+                    <div class="page-badge">35 / 35</div>
                 </div>
             </div>
 
