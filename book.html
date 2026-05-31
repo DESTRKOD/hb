@@ -3,8 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Комикс для Ани! 📖 25 страниц</title>
+    <title>Комикс для Ани! 📖</title>
     <style>
+        :root {
+            --bg-image: url('https://i.imgur.com/PF0ZvT7.jpeg');
+            --page-bg: #fffdf0;
+            --text-color: #111;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -15,28 +21,26 @@
         }
 
         body {
-            background-image: linear-gradient(rgba(30, 30, 36, 0.92), rgba(30, 30, 36, 0.92)), url('https://i.imgur.com/PF0ZvT7.jpeg');
+            background-image: linear-gradient(rgba(30, 30, 36, 0.9), rgba(30, 30, 36, 0.9)), var(--bg-image);
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Segoe UI Emoji', cursive, sans-serif;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            overflow: hidden;
             padding: 20px;
-            margin: 0;
         }
 
         .book-container {
             position: relative;
             width: 100%;
-            max-width: 500px;
+            max-width: 400px;
             height: 80vh;
-            max-height: 700px;
-            perspective: 2200px;
-            margin: 0 auto;
-            cursor: pointer;
+            max-height: 680px;
+            perspective: 2000px;
         }
 
         .book {
@@ -44,7 +48,6 @@
             width: 100%;
             height: 100%;
             transform-style: preserve-3d;
-            transition: transform 0.2s ease;
         }
 
         .page {
@@ -53,16 +56,15 @@
             height: 100%;
             top: 0;
             left: 0;
-            background-color: #fffdf0;
-            border-radius: 16px;
-            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0,0,0,0.05);
+            background-color: var(--page-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             transform-origin: left center;
-            transition: transform 0.65s cubic-bezier(0.23, 1, 0.32, 1);
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
             transform-style: preserve-3d;
             backface-visibility: hidden;
             overflow: hidden;
             padding: 0;
-            will-change: transform;
         }
 
         .page.flipped {
@@ -71,40 +73,30 @@
 
         @media (min-width: 1024px) {
             .book-container {
-                max-width: 1000px;
+                max-width: 900px;
                 height: 80vh;
                 max-height: 750px;
-                perspective: 2800px;
             }
             .book {
                 transform: translateX(25%);
-                width: 200%;
             }
             .page {
                 width: 50%;
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
             }
             .page.flipped {
                 transform: rotateY(-180deg) translateX(100%);
             }
         }
 
-        @media (max-width: 1023px) {
-            .page.flipped {
-                transform: rotateY(-180deg);
-            }
-        }
-
         .comic-frame {
-            border: 4px solid #1f1f2b;
-            border-radius: 12px;
+            border: 4px solid #000;
+            border-radius: 8px;
             height: 100%;
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            background: #fffcf0;
+            background: #fff;
             position: relative;
-            box-shadow: inset 0 0 0 2px rgba(255,245,200,0.6);
         }
 
         .photo {
@@ -112,15 +104,15 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            background-color: #f8f3e0;
-            border-bottom: 4px solid #1f1f2b;
+            background-color: #fcfcfc;
+            border-bottom: 4px solid #000;
         }
 
         .text-bubble {
             flex: 0.7;
-            padding: 15px 12px;
-            background: #fffef7;
-            color: #1e1a15;
+            padding: 15px;
+            background: #fff;
+            color: var(--text-color);
             font-size: 16px;
             line-height: 1.4;
             text-align: center;
@@ -128,369 +120,326 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Comic Neue', 'Comic Sans MS', cursive;
-            letter-spacing: 0.3px;
         }
 
         .page-badge {
             position: absolute;
-            bottom: 10px;
-            right: 14px;
-            background: #2c2c2c;
-            color: #f9eec1;
-            padding: 4px 12px;
+            bottom: 8px;
+            right: 12px;
+            background: #000;
+            color: #fff;
+            padding: 2px 10px;
             font-size: 12px;
-            border-radius: 40px;
+            border-radius: 20px;
             font-weight: bold;
-            z-index: 20;
-            font-family: monospace;
-            backdrop-filter: blur(2px);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            z-index: 10;
         }
 
         .title-page {
-            background: linear-gradient(135deg, #3b8cff, #00c9ff);
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
         }
         .title-page .comic-frame {
-            background: rgba(0,0,0,0.1);
-            border-color: #ffefb9;
-            backdrop-filter: brightness(1.02);
+            background: transparent;
+            border-color: #fff;
+            justify-content: center;
+            align-items: center;
         }
         .title-page .photo {
             display: none;
         }
         .title-page .text-bubble {
             background: transparent;
-            color: white;
+            color: #fff;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
             flex: 1;
-            text-shadow: 3px 3px 0 #105090;
         }
         .main-title {
-            font-size: 28px;
+            font-size: 26px;
             line-height: 1.3;
-            font-weight: 900;
-            background: linear-gradient(135deg, #FFF6B0, #FFF);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: none;
+            text-shadow: 2px 2px 0px #000;
+            font-weight: bold;
         }
         .sub-author {
-            font-size: 18px;
+            font-size: 16px;
             font-style: italic;
-            background: rgba(0,0,0,0.3);
-            display: inline-block;
-            padding: 5px 15px;
-            border-radius: 40px;
+            opacity: 0.9;
         }
         .title-page .page-badge {
-            background: #ffde9c;
-            color: #1f2c46;
+            background: #fff;
+            color: #000;
         }
 
         .back-cover {
-            background: radial-gradient(circle at 20% 30%, #a180cf, #5f3b8c);
+            background: linear-gradient(135deg, #654ea3, #eaafc8);
         }
         .back-cover .comic-frame {
-            background: rgba(0,0,0,0.2);
-            border-color: #ffebc2;
+            background: transparent;
+            border-color: #fff;
         }
         .back-cover .text-bubble {
-            background: rgba(255,240,200,0.2);
-            backdrop-filter: blur(3px);
-            color: #fff5e6;
+            background: transparent;
+            color: #fff;
             font-size: 22px;
-            font-weight: bold;
         }
         .back-cover .page-badge {
-            background: #ffd966;
-            color: #331d4a;
-        }
-
-        .nav-hint {
-            position: fixed;
-            bottom: 18px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            font-size: 13px;
-            background: rgba(0,0,0,0.6);
-            color: #ffecb3;
-            padding: 6px 12px;
-            width: fit-content;
-            margin: 0 auto;
-            border-radius: 60px;
-            backdrop-filter: blur(5px);
-            pointer-events: none;
-            font-weight: bold;
-            font-family: monospace;
-            z-index: 999;
-        }
-
-        @media (min-width: 800px) {
-            .nav-hint {
-                bottom: 25px;
-                font-size: 14px;
-            }
+            background: #fff;
+            color: #000;
         }
     </style>
 </head>
 <body>
 
-    <audio id="flipSound" preload="auto">
-        <source src="https://www.soundjay.com/misc/sounds/page-turn-01.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="flipSound" src="https://www.soundjay.com/misc/sounds/page-turn-01.mp3" preload="auto"></audio>
 
     <div class="book-container">
         <div class="book" id="book">
 
-            <div class="page title-page" data-page="0">
+            <div class="page title-page">
                 <div class="comic-frame">
                     <div class="text-bubble">
-                        <div class="main-title">📖 КАК ЖИЛА АНЯ<br>или СДРАОЛ! 🎈</div>
-                        <div class="sub-author">✨ автор: лучший друг ✨</div>
+                        <div class="main-title">КАК ЖИЛА АНЯ<br>или СДРАОЛ!</div>
+                        <div class="sub-author">автор: лучший друг</div>
                     </div>
                     <div class="page-badge">1 / 25</div>
                 </div>
             </div>
 
-            <div class="page" data-page="1">
+            <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/nYovnbO.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        🌙 6:00. В комнате ещё тихо, Аня сладко спит.
+                        6:00. В данной комнате еще тихо, Аня спит.
                     </div>
                     <div class="page-badge">2 / 25</div>
                 </div>
             </div>
 
-            <div class="page" data-page="2">
+            <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/teaByyk.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        🌤️ 7:00. Аня потихоньку просыпается и сладко потягивается.
+                        7:00. Аня потихоньку просыпается
                     </div>
                     <div class="page-badge">3 / 25</div>
                 </div>
             </div>
 
-            <div class="page" data-page="3">
+            <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/A5xVmmW.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        🥞 7:15. Быстрее бежим завтракать! Ароматные блинчики ждут.
+                        7:15. Быстрее бежим завтракать.
                     </div>
                     <div class="page-badge">4 / 25</div>
                 </div>
             </div>
 
-            <div class="page" data-page="4">
+            <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/RaqNL3k.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        🚀 09:15 — Дорога. Максимально серьезная и деловая Аня пошла покорять этот мир. 💼
+                        09:15 — Дорога. Максимально серьезная и деловая Аня пошла покорять этот мир. 💼
                     </div>
                     <div class="page-badge">5 / 25</div>
                 </div>
             </div>
 
-            <div class="page" data-page="5">
+            <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/pc2qVIT.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        😂 12:00 — Тот самый момент, когда в рабочий чат прислали угарный мем!
+                        12:00 — Тот самый момент среди дня, когда тебе прислали угарный мем в рабочий чат!
                     </div>
                     <div class="page-badge">6 / 25</div>
                 </div>
             </div>
 
-            <div class="page" data-page="6">
+            <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/TDtQgUI.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        🍕 14:00 — Обед! Время для любимой пиццы, роллов или чего-то очень вкусного 🍣
+                        14:00 — Обееед! Время для твоей любимой пиццы, роллов или чего-нибудь очень вкусного 🍕
                     </div>
                     <div class="page-badge">7 / 25</div>
                 </div>
             </div>
 
-            <div class="page" data-page="7">
+            <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/fCntIsa.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        💬 16:30 — Время для главных сплетен, важных историй и эмоциональных рассказов руками! ✨
+                        16:30 — Время для главных сплетен, важных историй и очень эмоциональных рассказов руками! ✨
                     </div>
                     <div class="page-badge">8 / 25</div>
                 </div>
             </div>
 
-            <div class="page" data-page="8">
+            <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/xdbeCCd.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        💃 19:00 — Включаются твои фирменные танцы, которые обожают все вокруг! 🎶
+                        19:00 — Включаются твои фирменные танцы, которые знают и любят абсолютно все вокруг! 💃
                     </div>
                     <div class="page-badge">9 / 25</div>
                 </div>
             </div>
 
-            <div class="page" data-page="9">
+            <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/VnyuG83.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        🌙 22:00 — Уставшие, но счастливые. День удался на славу!
+                        22:00 — Уставшие, но самые счастливые под конец этого дня. Теперь можно и отдохнуть!
                     </div>
                     <div class="page-badge">10 / 25</div>
                 </div>
             </div>
 
-            <div class="page" data-page="10">
+            <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/nYovnbO.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        🛁 Утро субботы — расслабляющая ванна с пеной и любимая музыка.
+                        6:00. Новое утро. Аня снова покоряет этот мир!
                     </div>
                     <div class="page-badge">11 / 25</div>
                 </div>
             </div>
 
-            <div class="page" data-page="11">
+            <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/teaByyk.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        📚 11:00 — Чтение интересной книги с чашечкой какао.
+                        8:00. Зарядка и позитивный настрой на весь день ⚡
                     </div>
                     <div class="page-badge">12 / 25</div>
                 </div>
             </div>
 
-            <div class="page" data-page="12">
+            <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/A5xVmmW.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        🛍️ 13:00 — Прогулка по любимым магазинам и милые находки.
+                        10:00. Рабочие будни — но Аня справляется лучше всех!
                     </div>
                     <div class="page-badge">13 / 25</div>
                 </div>
             </div>
 
-            <div class="page" data-page="13">
+            <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/RaqNL3k.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        ☕ 15:30 — Встреча с подругами в уютной кофейне, секреты и смех.
+                        11:30. Важная встреча — Аня в центре внимания ✨
                     </div>
                     <div class="page-badge">14 / 25</div>
                 </div>
             </div>
 
-            <div class="page" data-page="14">
+            <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/pc2qVIT.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        🎨 17:00 — Творчество: Аня рисует яркий закат акварелью.
+                        13:00. Обеденный перерыв — время для себя и своих мыслей ☕
                     </div>
                     <div class="page-badge">15 / 25</div>
                 </div>
             </div>
 
-            <div class="page" data-page="15">
+            <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/TDtQgUI.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        🍜 19:30 — Готовит ужин по новому рецепту — получается шедевр!
+                        15:00. Креативный беспорядок на столе — значит, работа кипит! 📝
                     </div>
                     <div class="page-badge">16 / 25</div>
                 </div>
             </div>
 
-            <div class="page" data-page="16">
+            <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/fCntIsa.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        📸 21:00 — Серия забавных селфи с котом и отправка лучшим друзьям.
+                        17:30. Звонок лучшему другу — обсудить всё на свете 📞
                     </div>
                     <div class="page-badge">17 / 25</div>
                 </div>
             </div>
 
-            <div class="page" data-page="17">
+            <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/xdbeCCd.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        🎬 22:30 — Вечерний просмотр любимого фильма под пледом.
+                        19:00. Вечерняя прогулка под звёздами 🌙
                     </div>
                     <div class="page-badge">18 / 25</div>
                 </div>
             </div>
 
-            <div class="page" data-page="18">
+            <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/VnyuG83.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        🌟 Воскресное утро: неспешный завтрак и планы на день.
+                        20:30. Вкусный уютный ужин дома 🍲
                     </div>
                     <div class="page-badge">19 / 25</div>
                 </div>
             </div>
 
-            <div class="page" data-page="19">
+            <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/nYovnbO.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        🧘‍♀️ 10:00 — Йога и медитация для хорошего настроения.
+                        21:00. Сериальчик под пледик — идеальный вечер 📺
                     </div>
                     <div class="page-badge">20 / 25</div>
                 </div>
             </div>
 
-            <div class="page" data-page="20">
+            <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/teaByyk.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        🌳 12:00 — Прогулка в парке, кормление уточек и свежий воздух.
+                        22:30. Планы на завтра — и снова мечты ✨
                     </div>
                     <div class="page-badge">21 / 25</div>
                 </div>
             </div>
 
-            <div class="page" data-page="21">
+            <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/A5xVmmW.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        🎂 15:00 — Маленький праздник: кекс с чаем и поздравления.
+                        23:00. Немного музыки перед сном 🎧
                     </div>
                     <div class="page-badge">22 / 25</div>
                 </div>
             </div>
 
-            <div class="page" data-page="22">
+            <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/RaqNL3k.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        ✨ Время мечтать: Аня строит планы на большое путешествие.
+                        23:30. Сладких снов, наша супер-Аня! 🌙
                     </div>
                     <div class="page-badge">23 / 25</div>
                 </div>
             </div>
 
-            <div class="page" data-page="23">
+            <div class="page">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/pc2qVIT.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        💌 18:00 — Пишет открытки друзьям, дарит тепло и улыбки.
+                        00:00. Новый день — новые приключения ждут!
                     </div>
                     <div class="page-badge">24 / 25</div>
                 </div>
             </div>
 
-            <div class="page back-cover" data-page="24">
+            <div class="page back-cover">
                 <div class="comic-frame">
                     <div class="photo" style="background-image: url('https://i.imgur.com/XZUTQGR.png'); background-size: cover; background-position: center;"></div>
                     <div class="text-bubble">
-                        🎉 С ДНЕМ РОЖДЕНИЯ, АНЯ! 🎂<br>Наша история продолжается... 💖
+                        С ДНЕМ РОЖДЕНИЯ, АНЯ! Наша история продолжается... 🎉🎂
                     </div>
                     <div class="page-badge">25 / 25</div>
                 </div>
@@ -498,114 +447,45 @@
 
         </div>
     </div>
-    <div class="nav-hint">📖 ← Листай влево / вправо →</div>
 
     <script>
-        (function() {
-            const pages = Array.from(document.querySelectorAll('.page'));
-            const totalPages = pages.length;
-            const flipSound = document.getElementById('flipSound');
-            let turnedCount = 0;
+        const pages = Array.from(document.querySelectorAll('.page'));
+        const flipSound = document.getElementById('flipSound');
+        
+        pages.forEach((page, idx) => {
+            page.style.zIndex = pages.length - idx;
+        });
+        
+        let currentPageIndex = 0;
+
+        function playFlipSound() {
+            if (flipSound) {
+                flipSound.currentTime = 0;
+                flipSound.play().catch(e => console.log("Аудио активируется кликом"));
+            }
+        }
+
+        document.getElementById('book').addEventListener('click', (e) => {
+            const bookRect = e.currentTarget.getBoundingClientRect();
+            const clickX = e.clientX - bookRect.left;
+            const bookWidth = bookRect.width;
             
-            function playFlip() {
-                if (flipSound) {
-                    flipSound.currentTime = 0;
-                    const playPromise = flipSound.play();
-                    if (playPromise !== undefined) {
-                        playPromise.catch(e => {});
-                    }
+            if (clickX > bookWidth / 2) {
+                if (currentPageIndex < pages.length - 1) {
+                    pages[currentPageIndex].classList.add('flipped');
+                    pages[currentPageIndex].style.zIndex = currentPageIndex;
+                    playFlipSound();
+                    currentPageIndex++;
+                }
+            } else {
+                if (currentPageIndex > 0) {
+                    currentPageIndex--;
+                    pages[currentPageIndex].classList.remove('flipped');
+                    pages[currentPageIndex].style.zIndex = pages.length - currentPageIndex;
+                    playFlipSound();
                 }
             }
-            
-            function updatePagesState() {
-                for (let i = 0; i < pages.length; i++) {
-                    const shouldBeFlipped = (i < turnedCount);
-                    if (shouldBeFlipped) {
-                        pages[i].classList.add('flipped');
-                    } else {
-                        pages[i].classList.remove('flipped');
-                    }
-                    if (shouldBeFlipped) {
-                        pages[i].style.zIndex = i + 1;
-                    } else {
-                        pages[i].style.zIndex = pages.length - i;
-                    }
-                }
-                if (turnedCount < pages.length) {
-                    pages[turnedCount].style.zIndex = pages.length + 5;
-                }
-            }
-            
-            function nextPage() {
-                if (turnedCount < totalPages - 1) {
-                    turnedCount++;
-                    updatePagesState();
-                    playFlip();
-                    return true;
-                }
-                return false;
-            }
-            
-            function prevPage() {
-                if (turnedCount > 0) {
-                    turnedCount--;
-                    updatePagesState();
-                    playFlip();
-                    return true;
-                }
-                return false;
-            }
-            
-            function handleBookClick(event) {
-                const container = document.querySelector('.book-container');
-                const containerRect = container.getBoundingClientRect();
-                let relativeX = event.clientX - containerRect.left;
-                const containerWidth = containerRect.width;
-                const isRightSide = (relativeX > containerWidth / 2);
-                
-                if (isRightSide) {
-                    nextPage();
-                } else {
-                    prevPage();
-                }
-            }
-            
-            function resetToFirstPage() {
-                turnedCount = 0;
-                updatePagesState();
-            }
-            
-            const bookDiv = document.getElementById('book');
-            if (bookDiv) {
-                bookDiv.removeEventListener('click', handleBookClick);
-                bookDiv.addEventListener('click', handleBookClick);
-            }
-            
-            bookDiv.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                return false;
-            });
-            
-            resetToFirstPage();
-            
-            window.addEventListener('resize', () => {
-                updatePagesState();
-            });
-            
-            setTimeout(() => {
-                updatePagesState();
-            }, 100);
-            
-            window.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowRight') {
-                    e.preventDefault();
-                    nextPage();
-                } else if (e.key === 'ArrowLeft') {
-                    e.preventDefault();
-                    prevPage();
-                }
-            });
-        })();
+        });
     </script>
 </body>
 </html>
