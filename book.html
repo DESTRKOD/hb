@@ -186,6 +186,44 @@
             line-height: 1.5;
             padding: 20px;
         }
+
+        .video-page .video-container {
+            flex: 1.3;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 4px solid #000;
+        }
+
+        .video-page .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-page .play-btn {
+            position: absolute;
+            background: rgba(0,0,0,0.75);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 40px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Comic Sans MS', cursive;
+            z-index: 15;
+            backdrop-filter: blur(5px);
+            transition: 0.2s;
+        }
+
+        .video-page .play-btn:hover {
+            background: rgba(0,0,0,0.9);
+            transform: scale(1.02);
+        }
     </style>
 </head>
 <body>
@@ -473,11 +511,17 @@
                 </div>
             </div>
 
-            <div class="page">
+            <div class="page video-page">
                 <div class="comic-frame">
-                    <div class="photo" style="background-image: url('https://i.imgur.com/nYovnbO.png'); background-size: cover; background-position: center;"></div>
+                    <div class="video-container" id="videoContainer29">
+                        <video id="birthdayVideo29" poster="https://i.imgur.com/XZUTQGR.png" preload="auto" playsinline>
+                            <source src="https://res.cloudinary.com/dsd6n5bvj/video/upload/v1780259622/iwannadance_xl1xw2.mp4" type="video/mp4">
+                            Твой браузер не поддерживает видео.
+                        </video>
+                        <button class="play-btn" id="playVideoBtn29">▶ НАЖМИ, ЧТОБЫ СМОТРЕТЬ СО ЗВУКОМ</button>
+                    </div>
                     <div class="text-bubble">
-                        22:30. Планы на завтра — и снова мечты ✨
+                        🎥 СЮРПРИЗ! Смотри до конца 💙
                     </div>
                     <div class="page-badge">29 / 35</div>
                 </div>
@@ -537,9 +581,9 @@
                 <div class="comic-frame">
                     <div class="text-bubble">
                         💖 Дорогая Аня! 💖<br><br>
-                        С днём рождения! Ты — самый яркий человек в нашей жизни. Спасибо тебе за твою улыбку, за твои танцы, за твои бесконечные истории и эмоции. С тобой каждый день становится праздником.<br><br>
+                        С днём рождения! Ты — самый яркий человек. Спасибо за твою улыбку, за твои бесконечные истории и эмоции. С тобой каждый день становится праздником.<br><br>
                         Желаю тебе море счастья, океан любви, горы успеха и чтобы все твои мечты сбывались!<br><br>
-                        Оставайся такой же искренней, весёлой и невероятной. Мы тебя очень любим!<br><br>
+                        Оставайся такой же искренней и невероятной. Мы тебя очень любим!<br><br>
                         Твой лучший друг 🤍
                     </div>
                     <div class="page-badge">35 / 35</div>
@@ -584,6 +628,22 @@
         pages.forEach(page => {
             page.addEventListener('click', handlePageClick);
         });
+
+        const video29 = document.getElementById('birthdayVideo29');
+        const playBtn29 = document.getElementById('playVideoBtn29');
+
+        if (playBtn29 && video29) {
+            playBtn29.addEventListener('click', (e) => {
+                e.stopPropagation();
+                video29.play();
+                playBtn29.style.display = 'none';
+            });
+            
+            video29.addEventListener('ended', () => {
+                playBtn29.style.display = 'flex';
+                playBtn29.textContent = '🔄 НАЖМИ, ЧТОБЫ ПОВТОРИТЬ';
+            });
+        }
     </script>
 </body>
 </html>
