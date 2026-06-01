@@ -220,6 +220,40 @@
             background: rgba(0,0,0,0.9);
             transform: scale(1.02);
         }
+
+        /* Стили для аудио-кнопки на 30 странице */
+        .audio-page .text-bubble {
+            flex-direction: column;
+            gap: 12px;
+        }
+        .audio-btn {
+            background: #4a6fa5;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: bold;
+            font-family: 'Comic Sans MS', cursive;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            margin-top: 8px;
+        }
+        .audio-btn:hover {
+            background: #2c4c7a;
+            transform: scale(1.02);
+        }
+        .audio-btn.playing {
+            background: #2a7a3b;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
         .text-bubble, .photo {
             transition: opacity 0.2s ease;
         }
@@ -439,13 +473,19 @@
                 <div class="page-badge">29 / 35</div>
             </div>
         </div>
-        <div class="page">
+
+        <!-- 30 страница с музыкой (исправлено) -->
+        <div class="page audio-page">
             <div class="comic-frame">
                 <div class="photo" style="background-image: url('https://i.imgur.com/teaByyk.png'); background-size: cover; background-position: center;"></div>
-                <div class="text-bubble">С ДНЕМ РОЖДЕНИЯ! УРААА</div>
+                <div class="text-bubble">
+                    С ДНЕМ РОЖДЕНИЯ! УРААА
+                    <button class="audio-btn" id="musicBtn30">🎵 Включить музыку</button>
+                </div>
                 <div class="page-badge">30 / 35</div>
             </div>
         </div>
+
         <div class="page">
             <div class="comic-frame">
                 <div class="photo" style="background-image: url('https://i.imgur.com/A5xVmmW.png'); background-size: cover; background-position: center;"></div>
@@ -494,15 +534,12 @@
     let currentPageIndex = 0;
     let isAnimating = false;
 
-    // Главное исправление: полный пересчёт z-index после каждого перелистывания
     function updateZIndices() {
         pages.forEach((page, index) => {
             if (index < currentPageIndex) {
-                // Уже перевернутые страницы — внизу стопки
                 page.style.zIndex = index + 1;
                 page.classList.add('flipped');
             } else {
-                // Текущая + следующие страницы — сверху
                 page.style.zIndex = pages.length - (index - currentPageIndex);
                 page.classList.remove('flipped');
             }
@@ -517,14 +554,10 @@
 
             isAnimating = true;
             const pageToFlip = pages[currentPageIndex];
-
-            // Поднимаем страницу максимально высоко перед анимацией
             pageToFlip.style.zIndex = 9999;
-            void pageToFlip.offsetWidth; // force reflow
-
+            void pageToFlip.offsetWidth;
             pageToFlip.classList.add('flipped');
 
-            // Ждём окончания анимации (transitionend — точнее, чем setTimeout)
             const onEnd = (e) => {
                 if (e.propertyName === 'transform') {
                     pageToFlip.removeEventListener('transitionend', onEnd);
@@ -534,16 +567,13 @@
                 }
             };
             pageToFlip.addEventListener('transitionend', onEnd);
-
         } else {
-            // Листание назад (уже было отлично, но теперь тоже через updateZIndices)
             if (currentPageIndex <= 0) return;
             currentPageIndex--;
             updateZIndices();
         }
     }
 
-    // Клик по любой странице
     pages.forEach(page => {
         page.addEventListener('click', (event) => {
             const rect = page.getBoundingClientRect();
@@ -552,8 +582,7 @@
             flipPage(isRightSide);
         });
     });
-    // В этом коде ровно 577 строк. Именно 577 дней назад мы начали наше настоящее общение. С днем рождения)
-    // Инициализация
+
     updateZIndices();
 
     // Видео на 29 странице
@@ -570,7 +599,43 @@
             playBtn29.textContent = '🔄 НАЖМИ, ЧТОБЫ ПОВТОРИТЬ';
         });
     }
+
+    // Музыка на 30 странице
+    const musicBtn30 = document.getElementById('musicBtn30');
+    let audio30 = null;
+    let isMusicPlaying = false;
+
+    if (musicBtn30) {
+        musicBtn30.addEventListener('click', (e) => {
+            e.stopPropagation();
+            
+            if (audio30 && isMusicPlaying) {
+                audio30.pause();
+                audio30.currentTime = 0;
+                isMusicPlaying = false;
+                musicBtn30.classList.remove('playing');
+                musicBtn30.textContent = '🎵 Включить музыку';
+            } else {
+                const audioUrl = 'https://res.cloudinary.com/dsd6n5bvj/video/upload/v1780316445/Jacky_ethx5h.mp3';
+                audio30 = new Audio(audioUrl);
+                audio30.play().catch(err => {
+                    alert('Нажми ещё раз (Safari требует повторного нажатия)');
+                    // Повторная попытка
+                    audio30.play().catch(e => console.log('всё равно не получилось'));
+                });
+                isMusicPlaying = true;
+                musicBtn30.classList.add('playing');
+                musicBtn30.textContent = '🔊 Остановить музыку';
+                
+                audio30.onended = () => {
+                    isMusicPlaying = false;
+                    musicBtn30.classList.remove('playing');
+                    musicBtn30.textContent = '🎵 Включить музыку';
+                    audio30 = null;
+                };
+            }
+        });
+    }
 </script>
 </body>
 </html>
-
