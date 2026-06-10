@@ -547,8 +547,10 @@
         });
     }
 
-    function flipPage(forward, skipAnimationCheck = false) {
-        if (isAnimating && !skipAnimationCheck) return;
+    function flipPage(forward) {
+        if (isAnimating) return;
+        // Если авто-листание активно, пользователь не может листать
+        if (autoFlipActive) return;
 
         if (forward) {
             if (currentPageIndex >= pages.length - 1) return;
@@ -580,16 +582,18 @@
         if (autoFlipActive) return;
         autoFlipActive = true;
         
-        let targetPage = 34; // хотим дойти до 34 страницы (индексы с 0, значит страница 34 это индекс 33)
-        // Сейчас currentPageIndex = 29 (страница 30)
-        
         autoFlipInterval = setInterval(() => {
-            if (currentPageIndex < 33) { // индекс 33 это 34 страница
-                flipPage(true, true);
+            // Останавливаемся на 34 странице (индекс 33 — это 34 страница)
+            if (currentPageIndex < 33) {
+                // Временно отключаем блокировку для автоперелистывания
+                const wasAutoFlip = autoFlipActive;
+                autoFlipActive = false;
+                flipPage(true);
+                autoFlipActive = wasAutoFlip;
             } else {
                 stopAutoFlip();
             }
-        }, 1500); // 1.5 секунды между перелистываниями
+        }, 1500);
     }
 
     function stopAutoFlip() {
@@ -602,10 +606,9 @@
 
     pages.forEach(page => {
         page.addEventListener('click', (event) => {
-            // Если авто-листание активно, останавливаем его при клике пользователя
-            if (autoFlipActive) {
-                stopAutoFlip();
-            }
+            // Если авто-листание активно — игнорируем клики пользователя
+            if (autoFlipActive) return;
+            
             const rect = page.getBoundingClientRect();
             const clickX = event.clientX - rect.left;
             const isRightSide = clickX > rect.width / 2;
@@ -657,7 +660,6 @@
                 musicBtn30.classList.add('playing');
                 musicBtn30.textContent = '🔊 Остановить музыку';
                 
-                // Запускаем автоматическое перелистывание
                 startAutoFlip();
                 
                 audio30.onended = () => {
