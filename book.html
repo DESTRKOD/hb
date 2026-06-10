@@ -62,8 +62,8 @@
             border-radius: 8px;
             transform-origin: left center;
             transition: 
-                transform 1.15s cubic-bezier(0.645, 0.045, 0.355, 1),
-                box-shadow 1.15s cubic-bezier(0.645, 0.045, 0.355, 1);
+                transform 0.9s cubic-bezier(0.645, 0.045, 0.355, 1),
+                box-shadow 0.9s cubic-bezier(0.645, 0.045, 0.355, 1);
             transform-style: preserve-3d;
             backface-visibility: hidden;
             overflow: hidden;
@@ -331,9 +331,8 @@
     const pages = Array.from(document.querySelectorAll('.page'));
     let currentPageIndex = 0;
     let isAnimating = false;
-    let autoFlipTimeout = null;
+    let autoFlipInterval = null;
     let autoFlipActive = false;
-    let autoStep = 0;
 
     function updateZIndices() {
         pages.forEach((page, index) => {
@@ -379,40 +378,25 @@
     function startAutoFlip() {
         if (autoFlipActive) return;
         autoFlipActive = true;
-        autoStep = 0;
         
-        function scheduleNext() {
-            if (currentPageIndex >= 33) {
+        autoFlipInterval = setInterval(() => {
+            if (currentPageIndex < 33) {
+                const wasAutoFlip = autoFlipActive;
+                autoFlipActive = false;
+                flipPage(true);
+                autoFlipActive = wasAutoFlip;
+            } else {
                 stopAutoFlip();
-                return;
             }
-            
-            let delay = (autoStep >= 2) ? 1000 : 1500;
-            
-            autoFlipTimeout = setTimeout(() => {
-                if (currentPageIndex < 33) {
-                    const wasAutoFlip = autoFlipActive;
-                    autoFlipActive = false;
-                    flipPage(true);
-                    autoFlipActive = wasAutoFlip;
-                    autoStep++;
-                    scheduleNext();
-                } else {
-                    stopAutoFlip();
-                }
-            }, delay);
-        }
-        
-        scheduleNext();
+        }, 1200);
     }
 
     function stopAutoFlip() {
-        if (autoFlipTimeout) {
-            clearTimeout(autoFlipTimeout);
-            autoFlipTimeout = null;
+        if (autoFlipInterval) {
+            clearInterval(autoFlipInterval);
+            autoFlipInterval = null;
         }
         autoFlipActive = false;
-        autoStep = 0;
     }
 
     pages.forEach(page => {
