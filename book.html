@@ -474,7 +474,6 @@
             </div>
         </div>
 
-        <!-- 30 страница с музыкой (исправлено) -->
         <div class="page audio-page">
             <div class="comic-frame">
                 <div class="photo" style="background-image: url('https://i.imgur.com/teaByyk.png'); background-size: cover; background-position: center;"></div>
@@ -533,6 +532,8 @@
     const pages = Array.from(document.querySelectorAll('.page'));
     let currentPageIndex = 0;
     let isAnimating = false;
+    let autoFlipInterval = null;
+    let autoFlipActive = false;
 
     function updateZIndices() {
         pages.forEach((page, index) => {
@@ -546,8 +547,8 @@
         });
     }
 
-    function flipPage(forward) {
-        if (isAnimating) return;
+    function flipPage(forward, skipAnimationCheck = false) {
+        if (isAnimating && !skipAnimationCheck) return;
 
         if (forward) {
             if (currentPageIndex >= pages.length - 1) return;
@@ -574,8 +575,37 @@
         }
     }
 
+    // Функция автоматического перелистывания с 30 по 34 страницу
+    function startAutoFlip() {
+        if (autoFlipActive) return;
+        autoFlipActive = true;
+        
+        let targetPage = 34; // хотим дойти до 34 страницы (индексы с 0, значит страница 34 это индекс 33)
+        // Сейчас currentPageIndex = 29 (страница 30)
+        
+        autoFlipInterval = setInterval(() => {
+            if (currentPageIndex < 33) { // индекс 33 это 34 страница
+                flipPage(true, true);
+            } else {
+                stopAutoFlip();
+            }
+        }, 1500); // 1.5 секунды между перелистываниями
+    }
+
+    function stopAutoFlip() {
+        if (autoFlipInterval) {
+            clearInterval(autoFlipInterval);
+            autoFlipInterval = null;
+        }
+        autoFlipActive = false;
+    }
+
     pages.forEach(page => {
         page.addEventListener('click', (event) => {
+            // Если авто-листание активно, останавливаем его при клике пользователя
+            if (autoFlipActive) {
+                stopAutoFlip();
+            }
             const rect = page.getBoundingClientRect();
             const clickX = event.clientX - rect.left;
             const isRightSide = clickX > rect.width / 2;
@@ -600,7 +630,7 @@
         });
     }
 
-    // Музыка на 30 странице
+    // Музыка на 30 странице + запуск автоматического перелистывания
     const musicBtn30 = document.getElementById('musicBtn30');
     let audio30 = null;
     let isMusicPlaying = false;
@@ -615,23 +645,27 @@
                 isMusicPlaying = false;
                 musicBtn30.classList.remove('playing');
                 musicBtn30.textContent = '🎵 Включить музыку';
+                stopAutoFlip();
             } else {
                 const audioUrl = 'https://res.cloudinary.com/dsd6n5bvj/video/upload/v1780316445/Jacky_ethx5h.mp3';
                 audio30 = new Audio(audioUrl);
                 audio30.play().catch(err => {
                     alert('Нажми ещё раз (Safari требует повторного нажатия)');
-                    // Повторная попытка
                     audio30.play().catch(e => console.log('всё равно не получилось'));
                 });
                 isMusicPlaying = true;
                 musicBtn30.classList.add('playing');
                 musicBtn30.textContent = '🔊 Остановить музыку';
                 
+                // Запускаем автоматическое перелистывание
+                startAutoFlip();
+                
                 audio30.onended = () => {
                     isMusicPlaying = false;
                     musicBtn30.classList.remove('playing');
                     musicBtn30.textContent = '🎵 Включить музыку';
                     audio30 = null;
+                    stopAutoFlip();
                 };
             }
         });
