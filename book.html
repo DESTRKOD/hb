@@ -82,6 +82,7 @@
             }
             .book {
                 transform: translateX(25%);
+                width: 200%;
             }
             .page {
                 width: 50%;
@@ -89,6 +90,15 @@
             .page.flipped {
                 transform: rotateY(-180deg) translateX(100%);
                 box-shadow: 18px 12px 32px rgba(0, 0, 0, 0.32);
+            }
+            /* Последняя страница (35) — на весь экран, не разворот */
+            .page:last-child {
+                width: 100%;
+                left: auto;
+                right: 0;
+            }
+            .page:last-child.flipped {
+                transform: rotateY(-180deg) translateX(50%);
             }
         }
 
