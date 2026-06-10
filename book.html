@@ -16,7 +16,7 @@
             padding: 0;
             -webkit-user-select: none;
             user-select: none;
-            touch-action: manipulation;
+            touch-action: pan-x pan-y; 
         }
         html, body {
             position: fixed;
@@ -25,9 +25,10 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
+            touch-action: none;
         }
         body {
-            background-image: linear-gradient(rgba(30, 30, 36, 0.85), rgba(30, 30, 36, 0.85)), var(--bg-image);
+            background-image: linear-gradient(rgba(30, 30, 36, 0.9), rgba(30, 30, 36, 0.9)), var(--bg-image);
             background-size: cover;
             background-position: center;
             font-family: 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif;
@@ -43,8 +44,9 @@
             height: 80vh;
             max-height: 680px;
             perspective: 3000px;
-            overflow: visible;
+            overflow: hidden;
             border-radius: 12px;
+            touch-action: pan-x pinch-zoom;
         }
         .book {
             position: relative;
@@ -252,6 +254,10 @@
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
+
+        .text-bubble, .photo {
+            transition: opacity 0.2s ease;
+        }
     </style>
 </head>
 <body>
@@ -309,16 +315,16 @@
             <div class="comic-frame">
                 <div class="photo" style="background-image: url('https://i.imgur.com/teaByyk.png');"></div>
                 <div class="text-bubble">
-                    немного милоты
+                    С ДНЕМ РОЖДЕНИЯ! УРААА
                     <button class="audio-btn" id="musicBtn30">🎵 Включить музыку</button>
                 </div>
                 <div class="page-badge">30 / 35</div>
             </div>
         </div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/0LZB9lz.png');"></div><div class="text-bubble">You're beautiful</div><div class="page-badge">31 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/Lh73Nxm.png');"></div><div class="text-bubble">You're wonderful</div><div class="page-badge">32 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/POfrDAj.png');"></div><div class="text-bubble">incredible</div><div class="page-badge">33 / 35</div></div></div>
-        <div class="page big-text-page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/4aiYYLt.png');"></div><div class="text-bubble">I love you so friend</div><div class="page-badge">34 / 35</div></div></div>
+        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/A5xVmmW.png');"></div><div class="text-bubble">Новый день — новые приключения ждут!</div><div class="page-badge">31 / 35</div></div></div>
+        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/RaqNL3k.png');"></div><div class="text-bubble">Спасибо за этот день, он был особенным!</div><div class="page-badge">32 / 35</div></div></div>
+        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/pc2qVIT.png');"></div><div class="text-bubble">Ты самая лучшая, Аня! ❤️</div><div class="page-badge">33 / 35</div></div></div>
+        <div class="page big-text-page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/XZUTQGR.png');"></div><div class="text-bubble">🎉 С ДНЁМ РОЖДЕНИЯ, АНЯ! 🎉</div><div class="page-badge">34 / 35</div></div></div>
         <div class="page text-only-page"><div class="comic-frame"><div class="text-bubble">💖 Дорогая Аня! 💖<br><br>С днём рождения! Ты — самый яркий человек. Спасибо за твою улыбку, за твои бесконечные истории и эмоции. С тобой каждый день становится праздником.<br><br>Желаю тебе море счастья, океан любви, горы успеха и чтобы все твои мечты сбывались!<br><br>Оставайся такой же искренней и невероятной. Мы тебя очень любим!<br><br>Твой лучший друг 🤍</div><div class="page-badge">35 / 35</div></div></div>
     </div>
 </div>
