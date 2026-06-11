@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Секретный журнал 📖</title>
+    <title>Журнал для Ани 📖</title>
     <style>
         * {
             margin: 0;
@@ -57,16 +57,7 @@
             line-height: 1.4;
         }
 
-        .secret-hint {
-            font-size: 13px;
-            color: #8a6e4b;
-            border-top: 1px dashed #d4b47c;
-            padding-top: 18px;
-            margin-top: 10px;
-            font-style: italic;
-        }
-
-        /* ---------- ЭКРАН ЗАГРУЗКИ (изначально скрыт, показывается только если обход) ---------- */
+        /* ---------- ЭКРАН ЗАГРУЗКИ ---------- */
         .preloader-screen {
             position: fixed;
             top: 0;
@@ -153,7 +144,7 @@
             transform: scale(1);
         }
 
-        /* ---------- ЭКРАН ВОПРОСОВ (квиз) ---------- */
+        /* ---------- ПОСЛЕДОВАТЕЛЬНЫЙ КВИЗ (один вопрос за раз) ---------- */
         .quiz-screen {
             position: fixed;
             top: 0;
@@ -181,58 +172,48 @@
         .quiz-container {
             background: rgba(255, 250, 235, 0.95);
             border-radius: 48px;
-            padding: 30px 25px;
-            max-width: 500px;
+            padding: 40px 30px;
+            max-width: 450px;
             width: 100%;
             box-shadow: 0 25px 45px rgba(0,0,0,0.4), 0 0 0 8px #ffd966;
             text-align: center;
         }
 
-        .quiz-title {
-            font-size: 28px;
-            font-weight: bold;
-            color: #b83b5e;
-            margin-bottom: 10px;
-        }
-
-        .quiz-sub {
-            color: #6b4e3a;
-            margin-bottom: 25px;
+        .quiz-progress {
             font-size: 14px;
-        }
-
-        .quiz-question {
-            background: #fff0d4;
-            border-radius: 30px;
-            padding: 15px 20px;
-            margin-bottom: 20px;
-            text-align: left;
-            box-shadow: 0 5px 12px rgba(0,0,0,0.1);
-        }
-
-        .quiz-question p {
+            color: #b83b5e;
             font-weight: bold;
-            font-size: 18px;
-            color: #4a2a1e;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
         }
 
-        .quiz-question input {
+        .quiz-question-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4a2a1e;
+            margin-bottom: 30px;
+            line-height: 1.3;
+        }
+
+        .quiz-input {
             width: 100%;
-            padding: 12px 16px;
+            padding: 14px 20px;
             border-radius: 60px;
             border: 2px solid #e2b88a;
             background: white;
             font-family: inherit;
-            font-size: 16px;
+            font-size: 18px;
             outline: none;
+            text-align: center;
+            margin-bottom: 25px;
         }
 
-        .quiz-question input:focus {
+        .quiz-input:focus {
             border-color: #b83b5e;
+            box-shadow: 0 0 0 3px rgba(184,59,94,0.2);
         }
 
-        .quiz-btn {
+        .quiz-next-btn {
             background: #b83b5e;
             color: white;
             border: none;
@@ -241,23 +222,25 @@
             font-size: 20px;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 15px;
+            width: 100%;
             transition: 0.2s;
-            box-shadow: 0 6px 0 #6e2a44;
+            box-shadow: 0 5px 0 #6e2a44;
         }
 
-        .quiz-btn:active {
+        .quiz-next-btn:active {
             transform: translateY(2px);
+            box-shadow: 0 2px 0 #6e2a44;
         }
 
-        .error-msg {
+        .quiz-error {
             color: #d32f2f;
-            margin-top: 15px;
+            margin-top: 18px;
             font-weight: bold;
-            min-height: 45px;
+            min-height: 50px;
+            font-size: 15px;
         }
 
-        /* ---------- ОСНОВНОЙ ЖУРНАЛ (раньше комикс) ---------- */
+        /* ---------- ОСНОВНОЙ ЖУРНАЛ ---------- */
         .main-book-wrapper {
             opacity: 0;
             visibility: hidden;
@@ -395,17 +378,16 @@
 </head>
 <body>
 
-<!-- ЗАГЛУШКА ДЛЯ ТЕЛЕФОНОВ (показывается только если мобильное устройство, но можно обойти) -->
+<!-- ЗАГЛУШКА ДЛЯ ТЕЛЕФОНОВ -->
 <div id="blockScreen" class="block-screen" style="display: none;">
     <div class="block-content">
         <div class="block-emoji">📱🚫💻</div>
         <div class="block-title">ОТКРОЙ С КОМПЬЮТЕРА</div>
         <div class="block-text">я же говорил 😡<br>Этот журнал работает только на большом экране.</div>
-        <div class="secret-hint">* секретный обход существует, но тебе его не найти *</div>
     </div>
 </div>
 
-<!-- ПРЕЛОАДЕР с анимацией (появляется только при обходе) -->
+<!-- ПРЕЛОАДЕР -->
 <div id="preloaderScreen" class="preloader-screen" style="display: none;">
     <div class="preloader-content">
         <img id="loadingImage" class="preloader-image spinning-fast" src="https://i.imgur.com/BG3e2Uh.png" alt="Загрузка">
@@ -413,20 +395,18 @@
     </div>
 </div>
 
-<!-- ЭКРАН ВОПРОСОВ -->
+<!-- ПОСЛЕДОВАТЕЛЬНЫЙ КВИЗ (один вопрос за раз) -->
 <div id="quizScreen" class="quiz-screen">
     <div class="quiz-container">
-        <div class="quiz-title">🔐 СЕКРЕТНЫЙ ЖУРНАЛ</div>
-        <div class="quiz-sub">Ответь на вопросы, чтобы открыть</div>
-        <div class="quiz-question"><p>❓ Вопрос 1: сколько вам лет?</p><input type="text" id="q1" placeholder="Введите число" autocomplete="off"></div>
-        <div class="quiz-question"><p>❓ Вопрос 2: как вас зовут?</p><input type="text" id="q2" placeholder="Имя" autocomplete="off"></div>
-        <div class="quiz-question"><p>❓ Вопрос 3: малинник это?</p><input type="text" id="q3" placeholder="Кто/что это?" autocomplete="off"></div>
-        <button class="quiz-btn" id="submitQuizBtn">✨ ОТКРЫТЬ ЖУРНАЛ ✨</button>
-        <div class="error-msg" id="quizError"></div>
+        <div class="quiz-progress" id="quizProgress">Вопрос 1 из 3</div>
+        <div class="quiz-question-text" id="quizQuestion">сколько вам лет?</div>
+        <input type="text" id="quizAnswer" class="quiz-input" placeholder="Введите ответ" autocomplete="off">
+        <button id="quizNextBtn" class="quiz-next-btn">ДАЛЕЕ</button>
+        <div id="quizErrorMsg" class="quiz-error"></div>
     </div>
 </div>
 
-<!-- ОСНОВНОЙ ЖУРНАЛ (комикс) -->
+<!-- ОСНОВНОЙ ЖУРНАЛ -->
 <div id="mainBookWrapper" class="main-book-wrapper">
     <div class="book-container">
         <div class="book" id="book">
@@ -471,23 +451,19 @@
 
 <script>
     (function() {
-        // Определяем мобильное устройство (iPhone, Android, телефон)
-        const isMobile = /iPhone|iPad|iPod|Android|BlackBerry|Windows Phone|Mobi/i.test(navigator.userAgent) || (window.innerWidth <= 800);
+        // Определяем мобильное устройство
+        const isMobile = /iPhone|iPad|iPod|Android|BlackBerry|Windows Phone|Mobi/i.test(navigator.userAgent) || window.innerWidth <= 800;
         
-        let secretUnlocked = false;
-        let tapCount = 0;
-        let tapTimer = null;
+        let journalUnlocked = false;
         
-        // Функция полного запуска журнала (обходной путь)
-        function launchSecretJournal() {
-            if (secretUnlocked) return;
-            secretUnlocked = true;
+        // Функция полного запуска журнала
+        function launchJournal() {
+            if (journalUnlocked) return;
+            journalUnlocked = true;
             
-            // Скрываем блокировочный экран если он виден
             const blockDiv = document.getElementById('blockScreen');
             if (blockDiv) blockDiv.style.display = 'none';
             
-            // Показываем прелоадер и запускаем полную цепочку анимации + квиз
             const preloader = document.getElementById('preloaderScreen');
             const loadingImg = document.getElementById('loadingImage');
             const milanaSpan = document.getElementById('milanaText');
@@ -495,72 +471,108 @@
             preloader.style.display = 'flex';
             
             let timer1, timer2;
-            
-            function startLoadAnim() {
-                loadingImg.classList.add('spinning-fast');
-                timer1 = setTimeout(() => {
-                    loadingImg.classList.remove('spinning-fast');
-                    loadingImg.classList.add('slow-down');
-                    timer2 = setTimeout(() => {
-                        loadingImg.classList.remove('slow-down');
-                        loadingImg.classList.add('heart-pulse');
-                        milanaSpan.classList.add('show');
+            loadingImg.classList.add('spinning-fast');
+            timer1 = setTimeout(() => {
+                loadingImg.classList.remove('spinning-fast');
+                loadingImg.classList.add('slow-down');
+                timer2 = setTimeout(() => {
+                    loadingImg.classList.remove('slow-down');
+                    loadingImg.classList.add('heart-pulse');
+                    milanaSpan.classList.add('show');
+                    setTimeout(() => {
+                        preloader.style.opacity = "0";
                         setTimeout(() => {
-                            preloader.style.opacity = "0";
-                            setTimeout(() => {
-                                preloader.style.display = "none";
-                                document.getElementById('quizScreen').classList.add('active');
-                            }, 500);
-                        }, 2000);
-                    }, 1200);
-                }, 5000);
-            }
-            startLoadAnim();
+                            preloader.style.display = "none";
+                            // Показываем последовательный квиз
+                            startSequentialQuiz();
+                        }, 500);
+                    }, 2000);
+                }, 1200);
+            }, 5000);
         }
         
-        // Если НЕ мобильное устройство — сразу запускаем журнал
+        // Если не мобильное — сразу запускаем
         if (!isMobile) {
-            launchSecretJournal();
-        } 
-        else {
-            // Телефон: показываем заглушку, и настраиваем секретный тап в правый верхний угол
+            launchJournal();
+        } else {
             const blockScreenDiv = document.getElementById('blockScreen');
             blockScreenDiv.style.display = 'flex';
-            
-            // Функция для отслеживания кликов в правом верхнем углу (три подряд)
-            function handleSecretTap(e) {
-                const x = e.clientX;
-                const y = e.clientY;
-                const viewportWidth = window.innerWidth;
-                const viewportHeight = window.innerHeight;
-                // правый верхний угол: ширина > 70% и высота < 30%
-                const isTopRight = (x > viewportWidth * 0.7) && (y < viewportHeight * 0.3);
-                
-                if (isTopRight) {
-                    tapCount++;
-                    if (tapTimer) clearTimeout(tapTimer);
-                    tapTimer = setTimeout(() => {
-                        tapCount = 0;
-                    }, 800);
-                    
-                    if (tapCount >= 3) {
-                        // Секретный обход активирован!
-                        tapCount = 0;
-                        if (tapTimer) clearTimeout(tapTimer);
-                        launchSecretJournal();
-                        // убираем обработчик после активации (чтобы не мешал)
-                        document.removeEventListener('click', handleSecretTap);
-                    }
-                } else {
-                    tapCount = 0;
-                    if (tapTimer) clearTimeout(tapTimer);
-                }
-            }
-            
-            document.addEventListener('click', handleSecretTap);
+            // Только заглушка, никаких секретных обходов
         }
         
-        // ---------- ЛОГИКА КВИЗА И ЖУРНАЛА (общая) ----------
+        // ---------- ПОСЛЕДОВАТЕЛЬНЫЙ КВИЗ (3 вопроса, по одному) ----------
+        let currentQuestionIndex = 0;
+        let answers = ['', '', ''];
+        const questions = [
+            { text: "сколько вам лет?", correct: "16" },
+            { text: "как вас зовут?", correct: "анна" },
+            { text: "малинник это?", correct: "фигурист" }
+        ];
+        
+        const quizScreen = document.getElementById('quizScreen');
+        const quizProgress = document.getElementById('quizProgress');
+        const quizQuestion = document.getElementById('quizQuestion');
+        const quizAnswerInput = document.getElementById('quizAnswer');
+        const quizNextBtn = document.getElementById('quizNextBtn');
+        const quizErrorMsg = document.getElementById('quizErrorMsg');
+        
+        function startSequentialQuiz() {
+            currentQuestionIndex = 0;
+            answers = ['', '', ''];
+            quizAnswerInput.value = '';
+            quizErrorMsg.textContent = '';
+            updateQuizUI();
+            quizScreen.classList.add('active');
+        }
+        
+        function updateQuizUI() {
+            const q = questions[currentQuestionIndex];
+            quizProgress.textContent = `Вопрос ${currentQuestionIndex + 1} из 3`;
+            quizQuestion.textContent = q.text;
+            quizAnswerInput.value = answers[currentQuestionIndex] || '';
+            if (currentQuestionIndex === 2) {
+                quizNextBtn.textContent = 'ЗАВЕРШИТЬ';
+            } else {
+                quizNextBtn.textContent = 'ДАЛЕЕ';
+            }
+            quizErrorMsg.textContent = '';
+        }
+        
+        function handleNext() {
+            const userAnswer = quizAnswerInput.value.trim().toLowerCase();
+            if (userAnswer === "") {
+                quizErrorMsg.textContent = "❌ Введите ответ";
+                return;
+            }
+            
+            const isCorrect = (userAnswer === questions[currentQuestionIndex].correct);
+            if (!isCorrect) {
+                quizErrorMsg.textContent = "❌ Неправильный ответ";
+                return;
+            }
+            
+            // Сохраняем ответ
+            answers[currentQuestionIndex] = userAnswer;
+            
+            if (currentQuestionIndex === 2) {
+                // Все вопросы пройдены успешно → открываем журнал
+                quizScreen.classList.remove('active');
+                const bookWrapper = document.getElementById('mainBookWrapper');
+                bookWrapper.classList.add('visible');
+                initJournal();
+            } else {
+                currentQuestionIndex++;
+                updateQuizUI();
+                quizAnswerInput.focus();
+            }
+        }
+        
+        quizNextBtn.addEventListener('click', handleNext);
+        quizAnswerInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleNext();
+        });
+        
+        // ---------- ИНИЦИАЛИЗАЦИЯ ЖУРНАЛА (перелистывание) ----------
         let pages = [];
         let currentPageIndex = 0;
         let isAnimating = false;
@@ -647,7 +659,7 @@
             });
             updateZIndices();
             
-            // видео
+            // Видео
             const video29 = document.getElementById('birthdayVideo29');
             const playBtn29 = document.getElementById('playVideoBtn29');
             if (playBtn29 && video29) {
@@ -662,7 +674,7 @@
                 });
             }
             
-            // аудио
+            // Аудио
             const musicBtn30 = document.getElementById('musicBtn30');
             let audio30 = null;
             let isMusicPlaying = false;
@@ -695,38 +707,6 @@
                 });
             }
         }
-        
-        // Обработка квиза
-        const submitBtn = document.getElementById('submitQuizBtn');
-        const errorDiv = document.getElementById('quizError');
-        const quizScreen = document.getElementById('quizScreen');
-        const bookWrapper = document.getElementById('mainBookWrapper');
-        
-        function checkQuizAnswers() {
-            const a1 = document.getElementById('q1').value.trim().toLowerCase();
-            const a2 = document.getElementById('q2').value.trim().toLowerCase();
-            const a3 = document.getElementById('q3').value.trim().toLowerCase();
-            if (a1 === '16' && a2 === 'анна' && a3 === 'фигурист') {
-                errorDiv.textContent = '';
-                quizScreen.classList.remove('active');
-                bookWrapper.classList.add('visible');
-                initJournal();
-            } else {
-                errorDiv.textContent = '❌ Неправильно! (16 / Анна / фигурист)';
-            }
-        }
-        
-        if (submitBtn) submitBtn.addEventListener('click', checkQuizAnswers);
-        ['q1','q2','q3'].forEach(id => {
-            const inp = document.getElementById(id);
-            if(inp) inp.addEventListener('keypress', (e) => { if(e.key === 'Enter') checkQuizAnswers(); });
-        });
-        
-        // Если уже открыли через обход, но квиз активирован, привяжем инициализацию после успешного квиза
-        const quizObserver = new MutationObserver((muts) => {
-            if(bookWrapper.classList.contains('visible') && !journalInitialized) initJournal();
-        });
-        quizObserver.observe(bookWrapper, { attributes: true });
     })();
 </script>
 </body>
