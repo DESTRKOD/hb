@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Комикс для Ани! 📖 Супер-загрузка</title>
+    <title>Комикс для Ани! 📖 Круговое вращение</title>
     <style>
-        /* ---------- СТИЛИ ДЛЯ ЭКРАНА ЗАГРУЗКИ С БЕШЕНЫМ ВРАЩЕНИЕМ ---------- */
+        /* ---------- СТИЛИ ДЛЯ ЭКРАНА ЗАГРУЗКИ: ДВИЖЕНИЕ ПО ОКРУЖНОСТИ ---------- */
         * {
             margin: 0;
             padding: 0;
@@ -25,7 +25,6 @@
             z-index: 10000;
             transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1);
             opacity: 1;
-            backdrop-filter: blur(0px);
         }
 
         .preloader-content {
@@ -37,43 +36,59 @@
             max-width: 90vw;
         }
 
-        .image-wrapper {
-            perspective: 800px;
-            display: inline-block;
+        /* Контейнер для кругового движения */
+        .orbit-container {
+            position: relative;
+            width: 380px;
+            height: 380px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        .preloader-image {
+        /* Анимация движения по окружности */
+        .orbit-image {
+            position: absolute;
             width: 280px;
             height: 280px;
-            object-fit: cover;
             border-radius: 48px;
+            object-fit: cover;
             box-shadow: 0 20px 35px rgba(0, 0, 0, 0.5), 0 0 0 4px rgba(255, 200, 100, 0.3);
             will-change: transform;
-            transition: transform 0.9s cubic-bezier(0.2, 0.9, 0.4, 1.2), border-radius 0.5s ease, box-shadow 0.6s ease;
-            display: block;
+            transition: all 0.9s cubic-bezier(0.2, 0.9, 0.4, 1.2);
+            animation: circleMove 0.6s infinite linear;
         }
 
-        /* Класс для дикого вращения (360 градусов по оси Y + немного по оси Z, чтобы эффектнее) */
-        .preloader-image.spinning-crazy {
-            animation: wildSpin 0.8s infinite linear;
-        }
-
-        @keyframes wildSpin {
+        /* Ключевые кадры для движения по окружности */
+        @keyframes circleMove {
             0% {
-                transform: rotateY(0deg) rotateX(0deg) rotateZ(0deg);
+                transform: rotate(0deg) translateX(160px) rotate(0deg);
             }
             100% {
-                transform: rotateY(360deg) rotateX(15deg) rotateZ(10deg);
+                transform: rotate(360deg) translateX(160px) rotate(-360deg);
             }
         }
 
-        /* Эффект увеличения к нам и остановка вращения */
-        .preloader-image.zoom-in-effect {
+        /* Эффект увеличения и остановки */
+        .orbit-image.zoom-in-effect {
             animation: none !important;
-            transform: scale(1.6) rotateY(0deg) rotateX(0deg) rotateZ(0deg) !important;
+            transform: scale(1.5) translateX(0) translateY(0) rotate(0deg) !important;
+            position: relative;
             border-radius: 20px !important;
             box-shadow: 0 30px 50px rgba(0, 0, 0, 0.7), 0 0 0 6px #ffd966;
             transition: transform 0.9s cubic-bezier(0.2, 0.95, 0.4, 1.1), border-radius 0.5s ease, box-shadow 0.6s ease;
+        }
+
+        /* Когда изображение останавливается и увеличивается — убираем абсолютное позиционирование */
+        .orbit-container.centered-mode {
+            justify-content: center;
+            align-items: center;
+        }
+
+        .orbit-container.centered-mode .orbit-image {
+            position: relative;
+            animation: none;
+            transform: scale(1.5);
         }
 
         .loading-text {
@@ -383,11 +398,11 @@
 </head>
 <body>
 
-<!-- ПРЕЛОАДЕР: ДИКОЕ ВРАЩЕНИЕ, ПОТОМ 360 -> УВЕЛИЧЕНИЕ -->
+<!-- ПРЕЛОАДЕР: ДВИЖЕНИЕ ПО ОКРУЖНОСТИ -->
 <div class="preloader-screen" id="preloaderScreen">
     <div class="preloader-content">
-        <div class="image-wrapper">
-            <img id="loadingImage" class="preloader-image spinning-crazy" src="https://i.imgur.com/BG3e2Uh.png" alt="Магическая загрузка">
+        <div class="orbit-container" id="orbitContainer">
+            <img id="loadingImage" class="orbit-image" src="https://i.imgur.com/BG3e2Uh.png" alt="Магическая загрузка">
         </div>
         <div class="loading-text">
             ЗАГРУЗКА КОМИКСА
@@ -449,46 +464,40 @@
         const bookWrapper = document.getElementById('mainBookWrapper');
         const loadingImg = document.getElementById('loadingImage');
         const readyMsgDiv = document.getElementById('readyMessage');
+        const orbitContainer = document.getElementById('orbitContainer');
         
-        // Таймер ровно 5 секунд бешеного вращения
         let spinTimeout;
         
-        function stopSpinAndZoomAndShowBook() {
+        function stopOrbitAndZoomAndShowBook() {
             if (spinTimeout) clearTimeout(spinTimeout);
             
-            // 1) Убираем класс анимации вращения (дикое вращение прекращается)
-            loadingImg.classList.remove('spinning-crazy');
-            
-            // 2) Принудительно сбрасываем transform, чтобы анимация не конфликтовала, 
-            //    затем сразу добавляем класс увеличения к нам
-            //    Небольшой трюк: принудительно вызываем reflow для чистоты
-            void loadingImg.offsetHeight;
-            
-            // Добавляем класс "zoom-in-effect" — он включает конечное увеличение scale(1.6) и красивый эффект "к нам"
+            // Останавливаем круговое движение и увеличиваем изображение в центре
             loadingImg.classList.add('zoom-in-effect');
             
-            // 3) Показываем надпись "ВСЁ ГОТОВО!"
+            // Убираем абсолютное позиционирование у контейнера (чтобы изображение встало в центр)
+            orbitContainer.style.justifyContent = 'center';
+            orbitContainer.style.alignItems = 'center';
+            
+            // Показываем надпись "ВСЁ ГОТОВО!"
             readyMsgDiv.classList.add('show');
             
-            // 4) После увеличения (анимация ~0.9s) скрываем прелоадер и запускаем книгу
+            // Через небольшую задержку скрываем прелоадер и показываем книгу
             setTimeout(() => {
-                // Плавное исчезновение прелоадера
                 preloader.style.opacity = "0";
                 setTimeout(() => {
                     preloader.style.display = "none";
                     bookWrapper.classList.add('visible');
-                    // Инициализируем интерактивность книги после появления
                     initBookAndInteractions();
                 }, 800);
-            }, 650); // Даём время насладиться увеличением (чуть раньше, но эффект полный)
+            }, 700);
         }
         
-        // Запускаем таймер на 5 секунд, через которые останавливаем вращение и делаем увеличение
+        // Таймер на 5 секунд, после чего останавливаем движение по окружности и увеличиваем
         spinTimeout = setTimeout(() => {
-            stopSpinAndZoomAndShowBook();
+            stopOrbitAndZoomAndShowBook();
         }, 5000);
         
-        // ---------- ЛОГИКА ПЕРЕЛИСТЫВАНИЯ КНИГИ (полностью сохранена) ----------
+        // ---------- ЛОГИКА ПЕРЕЛИСТЫВАНИЯ КНИГИ ----------
         let pages = [];
         let currentPageIndex = 0;
         let isAnimating = false;
@@ -632,7 +641,7 @@
             }
         }
         
-        // На случай, если книга станет видимой до инициализации - наблюдатель
+        // Наблюдатель за появлением книги
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
                 if (mutation.attributeName === 'class' && bookWrapper.classList.contains('visible') && !bookInitialized) {
@@ -641,8 +650,6 @@
             });
         });
         observer.observe(bookWrapper, { attributes: true });
-        
-        // Если по какой-то причине класс visible добавился мгновенно (но его нет до таймера) - просто страховка.
     })();
 </script>
 </body>
