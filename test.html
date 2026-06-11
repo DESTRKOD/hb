@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Комикс для Ани! 📖 Загрузка и книга</title>
+    <title>Комикс для Ани! 📖 Супер-загрузка</title>
     <style>
-        /* ---------- СТИЛИ ДЛЯ ПРЕЛОАДЕРА (ЭКРАН ЗАГРУЗКИ) ---------- */
+        /* ---------- СТИЛИ ДЛЯ ЭКРАНА ЗАГРУЗКИ С БЕШЕНЫМ ВРАЩЕНИЕМ ---------- */
         * {
             margin: 0;
             padding: 0;
@@ -18,7 +18,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #0c0b16;
+            background: radial-gradient(circle at center, #1a1a2e, #0a0a15);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -33,10 +33,13 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 24px;
+            gap: 30px;
             max-width: 90vw;
-            transform: scale(1);
-            transition: transform 0.6s ease-out;
+        }
+
+        .image-wrapper {
+            perspective: 800px;
+            display: inline-block;
         }
 
         .preloader-image {
@@ -44,33 +47,45 @@
             height: 280px;
             object-fit: cover;
             border-radius: 48px;
-            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.4);
-            transition: all 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.5), 0 0 0 4px rgba(255, 200, 100, 0.3);
             will-change: transform;
-            border: 3px solid rgba(255, 215, 150, 0.5);
+            transition: transform 0.9s cubic-bezier(0.2, 0.9, 0.4, 1.2), border-radius 0.5s ease, box-shadow 0.6s ease;
+            display: block;
         }
 
-        /* анимация пульсации во время загрузки */
-        .preloader-image.pulsing {
-            animation: softPulse 1.2s infinite ease-in-out;
+        /* Класс для дикого вращения (360 градусов по оси Y + немного по оси Z, чтобы эффектнее) */
+        .preloader-image.spinning-crazy {
+            animation: wildSpin 0.8s infinite linear;
         }
 
-        @keyframes softPulse {
-            0% { transform: scale(1); box-shadow: 0 20px 35px rgba(0,0,0,0.4);}
-            50% { transform: scale(1.02); box-shadow: 0 28px 45px rgba(0,0,0,0.5); border-color: rgba(255,215,150,0.9);}
-            100% { transform: scale(1); box-shadow: 0 20px 35px rgba(0,0,0,0.4);}
+        @keyframes wildSpin {
+            0% {
+                transform: rotateY(0deg) rotateX(0deg) rotateZ(0deg);
+            }
+            100% {
+                transform: rotateY(360deg) rotateX(15deg) rotateZ(10deg);
+            }
+        }
+
+        /* Эффект увеличения к нам и остановка вращения */
+        .preloader-image.zoom-in-effect {
+            animation: none !important;
+            transform: scale(1.6) rotateY(0deg) rotateX(0deg) rotateZ(0deg) !important;
+            border-radius: 20px !important;
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.7), 0 0 0 6px #ffd966;
+            transition: transform 0.9s cubic-bezier(0.2, 0.95, 0.4, 1.1), border-radius 0.5s ease, box-shadow 0.6s ease;
         }
 
         .loading-text {
             font-family: 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif;
             font-size: 28px;
             font-weight: bold;
-            background: linear-gradient(135deg, #FFD966, #FFB347);
+            background: linear-gradient(135deg, #FFD966, #FF884D);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             letter-spacing: 2px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
 
         .loading-dots {
@@ -90,23 +105,24 @@
 
         @keyframes dotsBlink {
             0%, 20% { opacity: 0.2; transform: translateY(0px);}
-            50% { opacity: 1; transform: translateY(-5px);}
+            50% { opacity: 1; transform: translateY(-6px);}
             80%, 100% { opacity: 0.2; transform: translateY(0px);}
         }
 
         .ready-message {
             font-family: 'Comic Sans MS', cursive;
-            font-size: 20px;
+            font-size: 22px;
             background: rgba(0,0,0,0.7);
             color: #ffecb3;
-            padding: 8px 22px;
-            border-radius: 40px;
-            backdrop-filter: blur(5px);
+            padding: 10px 26px;
+            border-radius: 50px;
+            backdrop-filter: blur(8px);
             font-weight: bold;
             opacity: 0;
-            transform: scale(0.9);
-            transition: all 0.4s ease;
-            margin-top: 10px;
+            transform: scale(0.8);
+            transition: all 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
+            margin-top: 5px;
+            letter-spacing: 1px;
         }
 
         .ready-message.show {
@@ -118,13 +134,13 @@
         .main-book-wrapper {
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.9s ease 0.1s, visibility 0s linear 1s;
+            transition: opacity 0.9s ease 0.15s, visibility 0s linear 1s;
             width: 100%;
             height: 100%;
             position: fixed;
             top: 0;
             left: 0;
-            background-image: linear-gradient(rgba(30, 30, 36, 0.9), rgba(30, 30, 36, 0.9)), url('https://i.imgur.com/PF0ZvT7.jpeg');
+            background-image: linear-gradient(rgba(30, 30, 36, 0.92), rgba(30, 30, 36, 0.92)), url('https://i.imgur.com/PF0ZvT7.jpeg');
             background-size: cover;
             background-position: center;
             font-family: 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif;
@@ -138,7 +154,7 @@
         .main-book-wrapper.visible {
             opacity: 1;
             visibility: visible;
-            transition: opacity 0.9s ease;
+            transition: opacity 0.85s ease;
         }
 
         .book-container {
@@ -367,25 +383,26 @@
 </head>
 <body>
 
-<!-- ПРЕЛОАДЕР: загрузка на 5 секунд с картинкой, текстом и масштабированием -->
+<!-- ПРЕЛОАДЕР: ДИКОЕ ВРАЩЕНИЕ, ПОТОМ 360 -> УВЕЛИЧЕНИЕ -->
 <div class="preloader-screen" id="preloaderScreen">
-    <div class="preloader-content" id="preloaderContent">
-        <img id="loadingImage" class="preloader-image pulsing" src="https://i.imgur.com/BG3e2Uh.png" alt="Загрузка комикса">
+    <div class="preloader-content">
+        <div class="image-wrapper">
+            <img id="loadingImage" class="preloader-image spinning-crazy" src="https://i.imgur.com/BG3e2Uh.png" alt="Магическая загрузка">
+        </div>
         <div class="loading-text">
-            ЗАГРУЗКА
+            ЗАГРУЗКА КОМИКСА
             <div class="loading-dots">
                 <span>.</span><span>.</span><span>.</span>
             </div>
         </div>
-        <div id="readyMessage" class="ready-message">✨ ВСЁ ГОТОВО ✨</div>
+        <div id="readyMessage" class="ready-message">✨ ВСЁ ГОТОВО! ✨</div>
     </div>
 </div>
 
-<!-- ОСНОВНОЙ КОНТЕЙНЕР КНИГИ (скрыт до завершения загрузки) -->
+<!-- ОСНОВНАЯ КНИГА -->
 <div class="main-book-wrapper" id="mainBookWrapper">
     <div class="book-container">
         <div class="book" id="book">
-            <!-- 35 страниц: титульная + все сцены -->
             <div class="page title-page"><div class="comic-frame"><div class="text-bubble"><div class="main-title">КАК ЖИЛА АНЯ<br>или СДРАОЛ!</div><div class="sub-author">автор: лучший друг</div></div><div class="page-badge">1 / 35</div></div></div>
             <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/nYovnbO.png');"></div><div class="text-bubble">6:00. В данной комнате еще тихо, Аня спит.</div><div class="page-badge">2 / 35</div></div></div>
             <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/teaByyk.png');"></div><div class="text-bubble">7:00. Аня потихоньку просыпается</div><div class="page-badge">3 / 35</div></div></div>
@@ -426,218 +443,207 @@
 </div>
 
 <script>
-    // ---------- ЛОГИКА ПРЕЛОАДЕРА ----------
-    const preloader = document.getElementById('preloaderScreen');
-    const bookWrapper = document.getElementById('mainBookWrapper');
-    const loadingImg = document.getElementById('loadingImage');
-    const readyMsgDiv = document.getElementById('readyMessage');
-    
-    let timer;
-
-    function finishLoadingAndShowBook() {
-        if (timer) clearTimeout(timer);
+    (function() {
+        // Элементы прелоадера
+        const preloader = document.getElementById('preloaderScreen');
+        const bookWrapper = document.getElementById('mainBookWrapper');
+        const loadingImg = document.getElementById('loadingImage');
+        const readyMsgDiv = document.getElementById('readyMessage');
         
-        // Убираем пульсацию, останавливаем анимацию
-        loadingImg.classList.remove('pulsing');
+        // Таймер ровно 5 секунд бешеного вращения
+        let spinTimeout;
         
-        // Анимация увеличения изображения (scale + плавность)
-        const contentDiv = document.querySelector('.preloader-content');
-        loadingImg.style.transition = "transform 0.65s cubic-bezier(0.2, 0.9, 0.6, 1.1), border-radius 0.5s";
-        loadingImg.style.transform = "scale(1.18)";
-        loadingImg.style.borderRadius = "24px";
-        
-        // Показываем текст "ВСЁ ГОТОВО"
-        readyMsgDiv.classList.add('show');
-        
-        // Через небольшой интервал скрыть прелоадер с красивым fade-out и показать книгу
-        setTimeout(() => {
-            preloader.style.opacity = "0";
-            // После исчезновения делаем preloader невидимым и показываем книгу
+        function stopSpinAndZoomAndShowBook() {
+            if (spinTimeout) clearTimeout(spinTimeout);
+            
+            // 1) Убираем класс анимации вращения (дикое вращение прекращается)
+            loadingImg.classList.remove('spinning-crazy');
+            
+            // 2) Принудительно сбрасываем transform, чтобы анимация не конфликтовала, 
+            //    затем сразу добавляем класс увеличения к нам
+            //    Небольшой трюк: принудительно вызываем reflow для чистоты
+            void loadingImg.offsetHeight;
+            
+            // Добавляем класс "zoom-in-effect" — он включает конечное увеличение scale(1.6) и красивый эффект "к нам"
+            loadingImg.classList.add('zoom-in-effect');
+            
+            // 3) Показываем надпись "ВСЁ ГОТОВО!"
+            readyMsgDiv.classList.add('show');
+            
+            // 4) После увеличения (анимация ~0.9s) скрываем прелоадер и запускаем книгу
             setTimeout(() => {
-                preloader.style.display = "none";
-                bookWrapper.classList.add('visible');
-                // Инициализация книги после того как она стала видимой
-                initBookAndInteractions();
-            }, 750);
-        }, 500);
-    }
-
-    // Таймер на 5 секунд: через 5 секунд запускаем финиш загрузки
-    // но имитируем "загрузку" даже если картинка кеширована
-    // также гарантируется масштабирование в конце
-    function startPreloader() {
-        // Устанавливаем 5 секунд загрузки
-        timer = setTimeout(() => {
-            finishLoadingAndShowBook();
+                // Плавное исчезновение прелоадера
+                preloader.style.opacity = "0";
+                setTimeout(() => {
+                    preloader.style.display = "none";
+                    bookWrapper.classList.add('visible');
+                    // Инициализируем интерактивность книги после появления
+                    initBookAndInteractions();
+                }, 800);
+            }, 650); // Даём время насладиться увеличением (чуть раньше, но эффект полный)
+        }
+        
+        // Запускаем таймер на 5 секунд, через которые останавливаем вращение и делаем увеличение
+        spinTimeout = setTimeout(() => {
+            stopSpinAndZoomAndShowBook();
         }, 5000);
         
-        // дополнительная гарантия: если вдруг картинка грузится медленно, но мы всё равно показываем через 5 сек
-        // Также после загрузки изображения можно, но не обязательно 
-        // Добавим эстетики: предзагрузка основного контента book не требуется, все ресурсы уже есть.
-    }
-
-    startPreloader();
-
-    // ---------- ЛОГИКА ПЕРЕЛИСТЫВАНИЯ (книга) ----------
-    let pages = [];
-    let currentPageIndex = 0;
-    let isAnimating = false;
-    let autoFlipInterval = null;
-    let autoFlipActive = false;
-    let bookInitialized = false;
-
-    function initBookAndInteractions() {
-        if (bookInitialized) return;
-        bookInitialized = true;
+        // ---------- ЛОГИКА ПЕРЕЛИСТЫВАНИЯ КНИГИ (полностью сохранена) ----------
+        let pages = [];
+        let currentPageIndex = 0;
+        let isAnimating = false;
+        let autoFlipInterval = null;
+        let autoFlipActive = false;
+        let bookInitialized = false;
         
-        pages = Array.from(document.querySelectorAll('#book .page'));
-        if (pages.length === 0) return;
-        
-        // Обновляем z-index и классы
-        function updateZIndices() {
-            pages.forEach((page, index) => {
-                if (index < currentPageIndex) {
-                    page.style.zIndex = index + 1;
-                    page.classList.add('flipped');
-                } else {
-                    page.style.zIndex = pages.length - (index - currentPageIndex);
-                    page.classList.remove('flipped');
-                }
-            });
-        }
-        
-        function flipPage(forward) {
-            if (isAnimating) return;
-            if (autoFlipActive) return;
+        function initBookAndInteractions() {
+            if (bookInitialized) return;
+            bookInitialized = true;
             
-            if (forward) {
-                if (currentPageIndex >= pages.length - 1) return;
-                isAnimating = true;
-                const pageToFlip = pages[currentPageIndex];
-                pageToFlip.style.zIndex = 9999;
-                void pageToFlip.offsetWidth;
-                pageToFlip.classList.add('flipped');
-                
-                const onEnd = (e) => {
-                    if (e.propertyName === 'transform') {
-                        pageToFlip.removeEventListener('transitionend', onEnd);
-                        currentPageIndex++;
-                        updateZIndices();
-                        isAnimating = false;
+            pages = Array.from(document.querySelectorAll('#book .page'));
+            if (pages.length === 0) return;
+            
+            function updateZIndices() {
+                pages.forEach((page, index) => {
+                    if (index < currentPageIndex) {
+                        page.style.zIndex = index + 1;
+                        page.classList.add('flipped');
+                    } else {
+                        page.style.zIndex = pages.length - (index - currentPageIndex);
+                        page.classList.remove('flipped');
                     }
-                };
-                pageToFlip.addEventListener('transitionend', onEnd);
-            } else {
-                if (currentPageIndex <= 0) return;
-                currentPageIndex--;
-                updateZIndices();
+                });
             }
-        }
-        
-        function startAutoFlip() {
-            if (autoFlipActive) return;
-            autoFlipActive = true;
-            autoFlipInterval = setInterval(() => {
-                if (currentPageIndex < 33) {
-                    const wasAuto = autoFlipActive;
-                    autoFlipActive = false;
-                    flipPage(true);
-                    autoFlipActive = wasAuto;
-                } else {
-                    stopAutoFlip();
-                }
-            }, 1200);
-        }
-        
-        function stopAutoFlip() {
-            if (autoFlipInterval) {
-                clearInterval(autoFlipInterval);
-                autoFlipInterval = null;
-            }
-            autoFlipActive = false;
-        }
-        
-        // клики на страницы (только если не автофлип)
-        pages.forEach(page => {
-            page.addEventListener('click', (event) => {
+            
+            function flipPage(forward) {
+                if (isAnimating) return;
                 if (autoFlipActive) return;
-                const rect = page.getBoundingClientRect();
-                const clickX = event.clientX - rect.left;
-                const isRightSide = clickX > rect.width / 2;
-                flipPage(isRightSide);
-            });
-        });
-        
-        updateZIndices();
-        
-        // --- Видео страница 29 ---
-        const video29 = document.getElementById('birthdayVideo29');
-        const playBtn29 = document.getElementById('playVideoBtn29');
-        if (playBtn29 && video29) {
-            playBtn29.addEventListener('click', (e) => {
-                e.stopPropagation();
-                video29.play().catch(err => console.log("autoplay blocked"));
-                playBtn29.style.display = 'none';
-            });
-            video29.addEventListener('ended', () => {
-                playBtn29.style.display = 'flex';
-                playBtn29.textContent = '🔄 НАЖМИ, ЧТОБЫ ПОВТОРИТЬ';
-            });
-        }
-        
-        // --- Аудио страница 30 (милота + автолистание) ---
-        const musicBtn30 = document.getElementById('musicBtn30');
-        let audio30 = null;
-        let isMusicPlaying = false;
-        
-        if (musicBtn30) {
-            musicBtn30.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (audio30 && isMusicPlaying) {
-                    audio30.pause();
-                    audio30.currentTime = 0;
-                    isMusicPlaying = false;
-                    musicBtn30.classList.remove('playing');
-                    musicBtn30.textContent = '🎵 Включить музыку';
-                    stopAutoFlip();
+                
+                if (forward) {
+                    if (currentPageIndex >= pages.length - 1) return;
+                    isAnimating = true;
+                    const pageToFlip = pages[currentPageIndex];
+                    pageToFlip.style.zIndex = 9999;
+                    void pageToFlip.offsetWidth;
+                    pageToFlip.classList.add('flipped');
+                    
+                    const onEnd = (e) => {
+                        if (e.propertyName === 'transform') {
+                            pageToFlip.removeEventListener('transitionend', onEnd);
+                            currentPageIndex++;
+                            updateZIndices();
+                            isAnimating = false;
+                        }
+                    };
+                    pageToFlip.addEventListener('transitionend', onEnd);
                 } else {
-                    const audioUrl = 'https://res.cloudinary.com/dsd6n5bvj/video/upload/v1780316445/Jacky_ethx5h.mp3';
-                    audio30 = new Audio(audioUrl);
-                    audio30.play().catch(err => {
-                        alert('Нажми ещё раз (Safari требует повторного нажатия)');
-                        audio30.play().catch(e => console.log("audio error"));
-                    });
-                    isMusicPlaying = true;
-                    musicBtn30.classList.add('playing');
-                    musicBtn30.textContent = '🔊 Остановить музыку';
-                    
-                    startAutoFlip();
-                    
-                    audio30.onended = () => {
+                    if (currentPageIndex <= 0) return;
+                    currentPageIndex--;
+                    updateZIndices();
+                }
+            }
+            
+            function startAutoFlip() {
+                if (autoFlipActive) return;
+                autoFlipActive = true;
+                autoFlipInterval = setInterval(() => {
+                    if (currentPageIndex < 33) {
+                        const wasAuto = autoFlipActive;
+                        autoFlipActive = false;
+                        flipPage(true);
+                        autoFlipActive = wasAuto;
+                    } else {
+                        stopAutoFlip();
+                    }
+                }, 1200);
+            }
+            
+            function stopAutoFlip() {
+                if (autoFlipInterval) {
+                    clearInterval(autoFlipInterval);
+                    autoFlipInterval = null;
+                }
+                autoFlipActive = false;
+            }
+            
+            pages.forEach(page => {
+                page.addEventListener('click', (event) => {
+                    if (autoFlipActive) return;
+                    const rect = page.getBoundingClientRect();
+                    const clickX = event.clientX - rect.left;
+                    const isRightSide = clickX > rect.width / 2;
+                    flipPage(isRightSide);
+                });
+            });
+            
+            updateZIndices();
+            
+            // Видео 29
+            const video29 = document.getElementById('birthdayVideo29');
+            const playBtn29 = document.getElementById('playVideoBtn29');
+            if (playBtn29 && video29) {
+                playBtn29.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    video29.play().catch(err => console.log("autoplay blocked"));
+                    playBtn29.style.display = 'none';
+                });
+                video29.addEventListener('ended', () => {
+                    playBtn29.style.display = 'flex';
+                    playBtn29.textContent = '🔄 НАЖМИ, ЧТОБЫ ПОВТОРИТЬ';
+                });
+            }
+            
+            // Аудио 30 + автофлип
+            const musicBtn30 = document.getElementById('musicBtn30');
+            let audio30 = null;
+            let isMusicPlaying = false;
+            
+            if (musicBtn30) {
+                musicBtn30.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (audio30 && isMusicPlaying) {
+                        audio30.pause();
+                        audio30.currentTime = 0;
                         isMusicPlaying = false;
                         musicBtn30.classList.remove('playing');
                         musicBtn30.textContent = '🎵 Включить музыку';
-                        audio30 = null;
                         stopAutoFlip();
-                    };
+                    } else {
+                        const audioUrl = 'https://res.cloudinary.com/dsd6n5bvj/video/upload/v1780316445/Jacky_ethx5h.mp3';
+                        audio30 = new Audio(audioUrl);
+                        audio30.play().catch(err => {
+                            alert('Нажми ещё раз (требуется взаимодействие)');
+                            audio30.play().catch(e => console.log("audio blocked"));
+                        });
+                        isMusicPlaying = true;
+                        musicBtn30.classList.add('playing');
+                        musicBtn30.textContent = '🔊 Остановить музыку';
+                        startAutoFlip();
+                        
+                        audio30.onended = () => {
+                            isMusicPlaying = false;
+                            musicBtn30.classList.remove('playing');
+                            musicBtn30.textContent = '🎵 Включить музыку';
+                            audio30 = null;
+                            stopAutoFlip();
+                        };
+                    }
+                });
+            }
+        }
+        
+        // На случай, если книга станет видимой до инициализации - наблюдатель
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === 'class' && bookWrapper.classList.contains('visible') && !bookInitialized) {
+                    initBookAndInteractions();
                 }
             });
-        }
-    }
-
-    // если книга уже видна (но инициализация будет после появления), подстраховка на случай если preloader быстро скроется
-    // Дополнительно, если к тому моменту wrapper уже видим, но скрипт мог не отработать, то проверим MutationObserver или просто защитим
-    // Но книгу показываем строго после .visible и вызываем initBookAndInteractions при добавлении класса.
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.attributeName === 'class' && bookWrapper.classList.contains('visible') && !bookInitialized) {
-                initBookAndInteractions();
-            }
         });
-    });
-    observer.observe(bookWrapper, { attributes: true });
-    
-    // Если вдруг preloader скрылся мгновенно (кеш), но класс visible ещё не добавился? но мы добавляем через время, так что всё ок.
+        observer.observe(bookWrapper, { attributes: true });
+        
+        // Если по какой-то причине класс visible добавился мгновенно (но его нет до таймера) - просто страховка.
+    })();
 </script>
 </body>
 </html>
