@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Комикс для Ани! 📖 Круговое вращение</title>
+    <title>Комикс для Ани! 🔄 Вращение изображения</title>
     <style>
-        /* ---------- СТИЛИ ДЛЯ ЭКРАНА ЗАГРУЗКИ: ДВИЖЕНИЕ ПО ОКРУЖНОСТИ ---------- */
+        /* ---------- СТИЛИ ДЛЯ ЭКРАНА ЗАГРУЗКИ: ВРАЩЕНИЕ САМОЙ КАРТИНКИ ---------- */
         * {
             margin: 0;
             padding: 0;
@@ -36,59 +36,38 @@
             max-width: 90vw;
         }
 
-        /* Контейнер для кругового движения */
-        .orbit-container {
-            position: relative;
-            width: 380px;
-            height: 380px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* Анимация движения по окружности */
-        .orbit-image {
-            position: absolute;
+        .preloader-image {
             width: 280px;
             height: 280px;
-            border-radius: 48px;
             object-fit: cover;
+            border-radius: 48px;
             box-shadow: 0 20px 35px rgba(0, 0, 0, 0.5), 0 0 0 4px rgba(255, 200, 100, 0.3);
             will-change: transform;
-            transition: all 0.9s cubic-bezier(0.2, 0.9, 0.4, 1.2);
-            animation: circleMove 0.6s infinite linear;
+            transition: transform 0.9s cubic-bezier(0.2, 0.9, 0.4, 1.2), border-radius 0.5s ease, box-shadow 0.6s ease;
+            display: block;
         }
 
-        /* Ключевые кадры для движения по окружности */
-        @keyframes circleMove {
+        /* Анимация вращения самого изображения (верхний угол становится снизу и т.д.) */
+        .preloader-image.spinning-rotate {
+            animation: spinImage 0.4s infinite linear;
+        }
+
+        @keyframes spinImage {
             0% {
-                transform: rotate(0deg) translateX(160px) rotate(0deg);
+                transform: rotate(0deg);
             }
             100% {
-                transform: rotate(360deg) translateX(160px) rotate(-360deg);
+                transform: rotate(360deg);
             }
         }
 
-        /* Эффект увеличения и остановки */
-        .orbit-image.zoom-in-effect {
+        /* Эффект увеличения и остановки вращения */
+        .preloader-image.zoom-in-effect {
             animation: none !important;
-            transform: scale(1.5) translateX(0) translateY(0) rotate(0deg) !important;
-            position: relative;
+            transform: scale(1.6) rotate(0deg) !important;
             border-radius: 20px !important;
             box-shadow: 0 30px 50px rgba(0, 0, 0, 0.7), 0 0 0 6px #ffd966;
             transition: transform 0.9s cubic-bezier(0.2, 0.95, 0.4, 1.1), border-radius 0.5s ease, box-shadow 0.6s ease;
-        }
-
-        /* Когда изображение останавливается и увеличивается — убираем абсолютное позиционирование */
-        .orbit-container.centered-mode {
-            justify-content: center;
-            align-items: center;
-        }
-
-        .orbit-container.centered-mode .orbit-image {
-            position: relative;
-            animation: none;
-            transform: scale(1.5);
         }
 
         .loading-text {
@@ -398,12 +377,10 @@
 </head>
 <body>
 
-<!-- ПРЕЛОАДЕР: ДВИЖЕНИЕ ПО ОКРУЖНОСТИ -->
+<!-- ПРЕЛОАДЕР: ВРАЩЕНИЕ ИЗОБРАЖЕНИЯ ВОКРУГ СВОЕЙ ОСИ -->
 <div class="preloader-screen" id="preloaderScreen">
     <div class="preloader-content">
-        <div class="orbit-container" id="orbitContainer">
-            <img id="loadingImage" class="orbit-image" src="https://i.imgur.com/BG3e2Uh.png" alt="Магическая загрузка">
-        </div>
+        <img id="loadingImage" class="preloader-image spinning-rotate" src="https://i.imgur.com/BG3e2Uh.png" alt="Магическая загрузка">
         <div class="loading-text">
             ЗАГРУЗКА КОМИКСА
             <div class="loading-dots">
@@ -464,19 +441,15 @@
         const bookWrapper = document.getElementById('mainBookWrapper');
         const loadingImg = document.getElementById('loadingImage');
         const readyMsgDiv = document.getElementById('readyMessage');
-        const orbitContainer = document.getElementById('orbitContainer');
         
         let spinTimeout;
         
-        function stopOrbitAndZoomAndShowBook() {
+        function stopSpinAndZoomAndShowBook() {
             if (spinTimeout) clearTimeout(spinTimeout);
             
-            // Останавливаем круговое движение и увеличиваем изображение в центре
+            // Останавливаем вращение и увеличиваем изображение
+            loadingImg.classList.remove('spinning-rotate');
             loadingImg.classList.add('zoom-in-effect');
-            
-            // Убираем абсолютное позиционирование у контейнера (чтобы изображение встало в центр)
-            orbitContainer.style.justifyContent = 'center';
-            orbitContainer.style.alignItems = 'center';
             
             // Показываем надпись "ВСЁ ГОТОВО!"
             readyMsgDiv.classList.add('show');
@@ -492,9 +465,9 @@
             }, 700);
         }
         
-        // Таймер на 5 секунд, после чего останавливаем движение по окружности и увеличиваем
+        // Таймер на 5 секунд, после чего останавливаем вращение и увеличиваем
         spinTimeout = setTimeout(() => {
-            stopOrbitAndZoomAndShowBook();
+            stopSpinAndZoomAndShowBook();
         }, 5000);
         
         // ---------- ЛОГИКА ПЕРЕЛИСТЫВАНИЯ КНИГИ ----------
