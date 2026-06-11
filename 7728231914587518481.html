@@ -3,32 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Комикс для Ани! 📖 Плавные страницы</title>
+    <title>Комикс для Ани! 🔄 Вращение изображения</title>
     <style>
-        :root {
-            --bg-image: url('https://i.imgur.com/PF0ZvT7.jpeg');
-            --page-bg: #fffdf0;
-            --text-color: #111;
-        }
+        /* ---------- СТИЛИ ДЛЯ ЭКРАНА ЗАГРУЗКИ: ВРАЩЕНИЕ САМОЙ КАРТИНКИ ---------- */
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            -webkit-user-select: none;
-            user-select: none;
-            touch-action: pan-x pan-y; 
+            box-sizing: border-box;
         }
-        html, body {
+
+        .preloader-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden;
-            touch-action: none;
+            background: radial-gradient(circle at center, #1a1a2e, #0a0a15);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            opacity: 1;
         }
-        body {
-            background-image: linear-gradient(rgba(30, 30, 36, 0.9), rgba(30, 30, 36, 0.9)), var(--bg-image);
+
+        .preloader-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            max-width: 90vw;
+        }
+
+        .preloader-image {
+            width: 280px;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 48px;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.5), 0 0 0 4px rgba(255, 200, 100, 0.3);
+            will-change: transform;
+            transition: transform 0.9s cubic-bezier(0.2, 0.9, 0.4, 1.2), border-radius 0.5s ease, box-shadow 0.6s ease;
+            display: block;
+        }
+
+        /* Анимация вращения самого изображения (верхний угол становится снизу и т.д.) */
+        .preloader-image.spinning-rotate {
+            animation: spinImage 0.4s infinite linear;
+        }
+
+        @keyframes spinImage {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Эффект увеличения и остановки вращения */
+        .preloader-image.zoom-in-effect {
+            animation: none !important;
+            transform: scale(1.6) rotate(0deg) !important;
+            border-radius: 20px !important;
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.7), 0 0 0 6px #ffd966;
+            transition: transform 0.9s cubic-bezier(0.2, 0.95, 0.4, 1.1), border-radius 0.5s ease, box-shadow 0.6s ease;
+        }
+
+        .loading-text {
+            font-family: 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif;
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #FFD966, #FF884D);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .loading-dots {
+            display: inline-flex;
+            gap: 6px;
+            margin-left: 6px;
+        }
+
+        .loading-dots span {
+            font-size: 32px;
+            animation: dotsBlink 1.4s infinite;
+            color: #FFB347;
+        }
+
+        .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes dotsBlink {
+            0%, 20% { opacity: 0.2; transform: translateY(0px);}
+            50% { opacity: 1; transform: translateY(-6px);}
+            80%, 100% { opacity: 0.2; transform: translateY(0px);}
+        }
+
+        .ready-message {
+            font-family: 'Comic Sans MS', cursive;
+            font-size: 22px;
+            background: rgba(0,0,0,0.7);
+            color: #ffecb3;
+            padding: 10px 26px;
+            border-radius: 50px;
+            backdrop-filter: blur(8px);
+            font-weight: bold;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
+            margin-top: 5px;
+            letter-spacing: 1px;
+        }
+
+        .ready-message.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* ---------- ОСНОВНОЙ КОНТЕЙНЕР КНИГИ (изначально скрыт) ---------- */
+        .main-book-wrapper {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.9s ease 0.15s, visibility 0s linear 1s;
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-image: linear-gradient(rgba(30, 30, 36, 0.92), rgba(30, 30, 36, 0.92)), url('https://i.imgur.com/PF0ZvT7.jpeg');
             background-size: cover;
             background-position: center;
             font-family: 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif;
@@ -36,7 +142,15 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            overflow: hidden;
         }
+
+        .main-book-wrapper.visible {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.85s ease;
+        }
+
         .book-container {
             position: relative;
             width: 100%;
@@ -48,34 +162,36 @@
             border-radius: 12px;
             touch-action: pan-x pinch-zoom;
         }
+
         .book {
             position: relative;
             width: 100%;
             height: 100%;
             transform-style: preserve-3d;
         }
+
         .page {
             position: absolute;
             width: 100%;
             height: 100%;
             top: 0;
             left: 0;
-            background-color: var(--page-bg);
+            background-color: #fffdf0;
             border-radius: 8px;
             transform-origin: left center;
-            transition: 
-                transform 0.9s cubic-bezier(0.645, 0.045, 0.355, 1),
-                box-shadow 0.9s cubic-bezier(0.645, 0.045, 0.355, 1);
+            transition: transform 0.9s cubic-bezier(0.645, 0.045, 0.355, 1), box-shadow 0.9s cubic-bezier(0.645, 0.045, 0.355, 1);
             transform-style: preserve-3d;
             backface-visibility: hidden;
             overflow: hidden;
             box-shadow: -4px 8px 18px rgba(0, 0, 0, 0.18);
             will-change: transform, box-shadow;
         }
+
         .page.flipped {
             transform: rotateY(-180deg);
             box-shadow: 12px 8px 28px rgba(0, 0, 0, 0.35);
         }
+
         @media (min-width: 1024px) {
             .book-container {
                 max-width: 900px;
@@ -104,6 +220,7 @@
             background: #fff;
             position: relative;
         }
+
         .photo {
             flex: 1.3;
             background-size: cover;
@@ -112,11 +229,12 @@
             background-color: #fcfcfc;
             border-bottom: 4px solid #000;
         }
+
         .text-bubble {
             flex: 0.7;
             padding: 15px;
             background: #fff;
-            color: var(--text-color);
+            color: #111;
             font-size: 16px;
             line-height: 1.4;
             text-align: center;
@@ -125,6 +243,7 @@
             align-items: center;
             justify-content: center;
         }
+
         .page-badge {
             position: absolute;
             bottom: 8px;
@@ -138,6 +257,7 @@
             z-index: 20;
             pointer-events: none;
         }
+
         .title-page {
             background: linear-gradient(135deg, #4facfe, #00f2fe);
         }
@@ -222,7 +342,6 @@
             background: rgba(0,0,0,0.9);
             transform: scale(1.02);
         }
-
         .audio-page .text-bubble {
             flex-direction: column;
             gap: 12px;
@@ -254,227 +373,257 @@
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
-
-        .text-bubble, .photo {
-            transition: opacity 0.2s ease;
-        }
     </style>
 </head>
 <body>
-<div class="book-container">
-    <div class="book" id="book">
-        <div class="page title-page">
-            <div class="comic-frame">
-                <div class="text-bubble">
-                    <div class="main-title">КАК ЖИЛА АНЯ<br>или СДРАОЛ!</div>
-                    <div class="sub-author">автор: лучший друг</div>
-                </div>
-                <div class="page-badge">1 / 35</div>
+
+<!-- ПРЕЛОАДЕР: ВРАЩЕНИЕ ИЗОБРАЖЕНИЯ ВОКРУГ СВОЕЙ ОСИ -->
+<div class="preloader-screen" id="preloaderScreen">
+    <div class="preloader-content">
+        <img id="loadingImage" class="preloader-image spinning-rotate" src="https://i.imgur.com/BG3e2Uh.png" alt="Магическая загрузка">
+        <div class="loading-text">
+            ЗАГРУЗКА КОМИКСА
+            <div class="loading-dots">
+                <span>.</span><span>.</span><span>.</span>
             </div>
         </div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/nYovnbO.png');"></div><div class="text-bubble">6:00. В данной комнате еще тихо, Аня спит.</div><div class="page-badge">2 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/teaByyk.png');"></div><div class="text-bubble">7:00. Аня потихоньку просыпается</div><div class="page-badge">3 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/A5xVmmW.png');"></div><div class="text-bubble">7:15. Быстрее бежим завтракать.</div><div class="page-badge">4 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/RaqNL3k.png');"></div><div class="text-bubble">7:30. Время одеваться и выходить</div><div class="page-badge">5 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/pc2qVIT.png');"></div><div class="text-bubble">Рано вам пока такое смотреть.</div><div class="page-badge">6 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/TDtQgUI.png');"></div><div class="text-bubble">Ну вот и все. можно выходить</div><div class="page-badge">7 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/fCntIsa.png');"></div><div class="text-bubble">Радостная (или нет(с окна не видно)) идет Аня в школу</div><div class="page-badge">8 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/xdbeCCd.png');"></div><div class="text-bubble">Кайф, поезд ушел прямо перед носом, спасибо</div><div class="page-badge">9 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/VnyuG83.png');"></div><div class="text-bubble">Ну с другой стороны в этом поезде хотя бы места есть</div><div class="page-badge">10 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/XZUTQGR.png');"></div><div class="text-bubble">Самое время написать своему кумиру. Так волнительно..</div><div class="page-badge">11 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/1W2UUB8.png');"></div><div class="text-bubble">да да, в автобусе он едет, конечно</div><div class="page-badge">12 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/bYKJ6pe.png');"></div><div class="text-bubble">ОМАГАД ЧТООООО!?</div><div class="page-badge">13 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/jDK7A8h.png');"></div><div class="text-bubble">ОМАГАД ЧТООООО?!</div><div class="page-badge">14 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/om8jBGx.png');"></div><div class="text-bubble">Пока лучшие друзья тихо неспеша идут в школу, нужно ответить на вопрос, че он такой красный как ярик? Ну тут все просто, отвык от подобного вида приветствия</div><div class="page-badge">15 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/5blbL6Y.png');"></div><div class="text-bubble">Добро пожаловать в родную школу (зачем пришли, если лето? ну консультации, че поделать)</div><div class="page-badge">16 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/QtkQHBd.png');"></div><div class="text-bubble">А вот и Лиза с Лешей. Алексеи идут на информатику, Лиза и Аня на английский</div><div class="page-badge">17 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/ukZSZf1.png');"></div><div class="text-bubble">Отсидев занятия, друзья идут играть на рояле (зачем? а че бы нет)</div><div class="page-badge">18 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/qWxl0d3.png');"></div><div class="text-bubble">Немного поиграв, данная компания принимает решение идти домой</div><div class="page-badge">19 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/YEieFCs.png');"></div><div class="text-bubble">Аня (как всегда) уходит вместе с Лизой, а Леша решил остаться в мужской (еееее) компании и идти домой вместе с Лешей (ну который Ч, если вы не поняли)</div><div class="page-badge">20 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/sgInZb1.png');"></div><div class="text-bubble">Вот, наконец, Аня дома. Чтобы снять усталость, первым делом, она идет в душ</div><div class="page-badge">21 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/LZ0MPZn.png');"></div><div class="text-bubble">Здесь без фоток (не плачьте)</div><div class="page-badge">22 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/O5hhdVo.png');"></div><div class="text-bubble">С новыми силами Аня идет смотреть тикток (ну и варить пельмени, как же без этого)</div><div class="page-badge">23 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/UxX2DWO.png');"></div><div class="text-bubble">Устав от тиктока, Аня идет в свою (ну и, конечно, Саввину) комнату, смотреть тикток (не спрашивайте.)</div><div class="page-badge">24 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/s3m7RbW.png');"></div><div class="text-bubble">Какой дурак там орет?</div><div class="page-badge">25 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/hkP3U30.png');"></div><div class="text-bubble">А этот че опять приперся?</div><div class="page-badge">26 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/AuaNKTn.png');"></div><div class="text-bubble">ой</div><div class="page-badge">27 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/32E0juD.png');"></div><div class="text-bubble">УРАААА! ОН ПРИШЕЛ!!</div><div class="page-badge">28 / 35</div></div></div>
-        <div class="page video-page">
-            <div class="comic-frame">
-                <div class="video-container" id="videoContainer29">
-                    <video id="birthdayVideo29" poster="https://i.imgur.com/XZUTQGR.png" preload="auto" playsinline>
-                        <source src="https://res.cloudinary.com/dsd6n5bvj/video/upload/v1780259622/iwannadance_xl1xw2.mp4" type="video/mp4">
-                    </video>
-                    <button class="play-btn" id="playVideoBtn29">▶ НАЖМИ, ЧТОБЫ СМОТРЕТЬ СО ЗВУКОМ</button>
-                </div>
-                <div class="text-bubble">без комментариев</div>
-                <div class="page-badge">29 / 35</div>
-            </div>
-        </div>
-        <div class="page audio-page">
-            <div class="comic-frame">
-                <div class="photo" style="background-image: url('https://i.imgur.com/teaByyk.png');"></div>
-                <div class="text-bubble">
-                    немного милоты в студию
-                    <button class="audio-btn" id="musicBtn30">🎵 Включить музыку</button>
-                </div>
-                <div class="page-badge">30 / 35</div>
-            </div>
-        </div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/0LZB9lz.png');"></div><div class="text-bubble">You're beautiful</div><div class="page-badge">31 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/POfrDAj.png');"></div><div class="text-bubble">You're wonderful</div><div class="page-badge">32 / 35</div></div></div>
-        <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/Lh73Nxm.png');"></div><div class="text-bubble">Incredible</div><div class="page-badge">33 / 35</div></div></div>
-        <div class="page big-text-page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/4aiYYLt.png');"></div><div class="text-bubble">I love you so, friend</div><div class="page-badge">34 / 35</div></div></div>
-                        <div class="page text-only-page">
-            <div class="comic-frame">
-                <div class="text-bubble">
-                    с днем рождения, подрун 🥳💖<br><br>
-                    Я тя поздравляю с your day. Будь крч самой счастливой, всегда улыбайся и добивайся всего, чего захочешь. Пусть каждый день приносит крутые эмоции да, новые впечатления и много поводов для радости, ну а как иначе хехе.<br><br>
-                    Спасибо, что ты есть. Ты очень классная и я рад, что мы с тобой познакомились. Оставайся такой же весёлой, доброй и прекрасной. Пусть суставы не болят, давление не скачет, а мечты становятся реальностью (ыхыхы шутко минутко 😂😳😁)<br><br>
-                    С днём рождения! 🎉💜
-                </div>
-                <div class="page-badge">35 / 35</div>
-            </div>
+        <div id="readyMessage" class="ready-message">✨ ВСЁ ГОТОВО! ✨</div>
+    </div>
+</div>
+
+<!-- ОСНОВНАЯ КНИГА -->
+<div class="main-book-wrapper" id="mainBookWrapper">
+    <div class="book-container">
+        <div class="book" id="book">
+            <div class="page title-page"><div class="comic-frame"><div class="text-bubble"><div class="main-title">КАК ЖИЛА АНЯ<br>или СДРАОЛ!</div><div class="sub-author">автор: лучший друг</div></div><div class="page-badge">1 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/nYovnbO.png');"></div><div class="text-bubble">6:00. В данной комнате еще тихо, Аня спит.</div><div class="page-badge">2 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/teaByyk.png');"></div><div class="text-bubble">7:00. Аня потихоньку просыпается</div><div class="page-badge">3 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/A5xVmmW.png');"></div><div class="text-bubble">7:15. Быстрее бежим завтракать.</div><div class="page-badge">4 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/RaqNL3k.png');"></div><div class="text-bubble">7:30. Время одеваться и выходить</div><div class="page-badge">5 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/pc2qVIT.png');"></div><div class="text-bubble">Рано вам пока такое смотреть.</div><div class="page-badge">6 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/TDtQgUI.png');"></div><div class="text-bubble">Ну вот и все. можно выходить</div><div class="page-badge">7 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/fCntIsa.png');"></div><div class="text-bubble">Радостная (или нет(с окна не видно)) идет Аня в школу</div><div class="page-badge">8 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/xdbeCCd.png');"></div><div class="text-bubble">Кайф, поезд ушел прямо перед носом, спасибо</div><div class="page-badge">9 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/VnyuG83.png');"></div><div class="text-bubble">Ну с другой стороны в этом поезде хотя бы места есть</div><div class="page-badge">10 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/XZUTQGR.png');"></div><div class="text-bubble">Самое время написать своему кумиру. Так волнительно..</div><div class="page-badge">11 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/1W2UUB8.png');"></div><div class="text-bubble">да да, в автобусе он едет, конечно</div><div class="page-badge">12 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/bYKJ6pe.png');"></div><div class="text-bubble">ОМАГАД ЧТООООО!?</div><div class="page-badge">13 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/jDK7A8h.png');"></div><div class="text-bubble">ОМАГАД ЧТООООО?!</div><div class="page-badge">14 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/om8jBGx.png');"></div><div class="text-bubble">Пока лучшие друзья тихо неспеша идут в школу, нужно ответить на вопрос, че он такой красный как ярик? Ну тут все просто, отвык от подобного вида приветствия</div><div class="page-badge">15 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/5blbL6Y.png');"></div><div class="text-bubble">Добро пожаловать в родную школу (зачем пришли, если лето? ну консультации, че поделать)</div><div class="page-badge">16 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/QtkQHBd.png');"></div><div class="text-bubble">А вот и Лиза с Лешей. Алексеи идут на информатику, Лиза и Аня на английский</div><div class="page-badge">17 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/ukZSZf1.png');"></div><div class="text-bubble">Отсидев занятия, друзья идут играть на рояле (зачем? а че бы нет)</div><div class="page-badge">18 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/qWxl0d3.png');"></div><div class="text-bubble">Немного поиграв, данная компания принимает решение идти домой</div><div class="page-badge">19 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/YEieFCs.png');"></div><div class="text-bubble">Аня (как всегда) уходит вместе с Лизой, а Леша решил остаться в мужской (еееее) компании и идти домой вместе с Лешей (ну который Ч, если вы не поняли)</div><div class="page-badge">20 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/sgInZb1.png');"></div><div class="text-bubble">Вот, наконец, Аня дома. Чтобы снять усталость, первым делом, она идет в душ</div><div class="page-badge">21 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/LZ0MPZn.png');"></div><div class="text-bubble">Здесь без фоток (не плачьте)</div><div class="page-badge">22 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/O5hhdVo.png');"></div><div class="text-bubble">С новыми силами Аня идет смотреть тикток (ну и варить пельмени, как же без этого)</div><div class="page-badge">23 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/UxX2DWO.png');"></div><div class="text-bubble">Устав от тиктока, Аня идет в свою (ну и, конечно, Саввину) комнату, смотреть тикток (не спрашивайте.)</div><div class="page-badge">24 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/s3m7RbW.png');"></div><div class="text-bubble">Какой дурак там орет?</div><div class="page-badge">25 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/hkP3U30.png');"></div><div class="text-bubble">А этот че опять приперся?</div><div class="page-badge">26 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/AuaNKTn.png');"></div><div class="text-bubble">ой</div><div class="page-badge">27 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/32E0juD.png');"></div><div class="text-bubble">УРАААА! ОН ПРИШЕЛ!!</div><div class="page-badge">28 / 35</div></div></div>
+            <div class="page video-page"><div class="comic-frame"><div class="video-container" id="videoContainer29"><video id="birthdayVideo29" poster="https://i.imgur.com/XZUTQGR.png" preload="auto" playsinline><source src="https://res.cloudinary.com/dsd6n5bvj/video/upload/v1780259622/iwannadance_xl1xw2.mp4" type="video/mp4"></video><button class="play-btn" id="playVideoBtn29">▶ НАЖМИ, ЧТОБЫ СМОТРЕТЬ СО ЗВУКОМ</button></div><div class="text-bubble">без комментариев</div><div class="page-badge">29 / 35</div></div></div>
+            <div class="page audio-page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/teaByyk.png');"></div><div class="text-bubble">немного милоты в студию<button class="audio-btn" id="musicBtn30">🎵 Включить музыку</button></div><div class="page-badge">30 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/0LZB9lz.png');"></div><div class="text-bubble">You're beautiful</div><div class="page-badge">31 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/POfrDAj.png');"></div><div class="text-bubble">You're wonderful</div><div class="page-badge">32 / 35</div></div></div>
+            <div class="page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/Lh73Nxm.png');"></div><div class="text-bubble">Incredible</div><div class="page-badge">33 / 35</div></div></div>
+            <div class="page big-text-page"><div class="comic-frame"><div class="photo" style="background-image: url('https://i.imgur.com/4aiYYLt.png');"></div><div class="text-bubble">I love you so, friend</div><div class="page-badge">34 / 35</div></div></div>
+            <div class="page text-only-page"><div class="comic-frame"><div class="text-bubble">с днем рождения, подрун 🥳💖<br><br>Я тя поздравляю с your day. Будь крч самой счастливой, всегда улыбайся и добивайся всего, чего захочешь. Пусть каждый день приносит крутые эмоции да, новые впечатления и много поводов для радости, ну а как иначе хехе.<br><br>Спасибо, что ты есть. Ты очень классная и я рад, что мы с тобой познакомились. Оставайся такой же весёлой, доброй и прекрасной. Пусть суставы не болят, давление не скачет, а мечты становятся реальностью (ыхыхы шутко минутко 😂😳😁)<br><br>С днём рождения! 🎉💜</div><div class="page-badge">35 / 35</div></div></div>
         </div>
     </div>
 </div>
 
 <script>
-    const pages = Array.from(document.querySelectorAll('.page'));
-    let currentPageIndex = 0;
-    let isAnimating = false;
-    let autoFlipInterval = null;
-    let autoFlipActive = false;
-
-    function updateZIndices() {
-        pages.forEach((page, index) => {
-            if (index < currentPageIndex) {
-                page.style.zIndex = index + 1;
-                page.classList.add('flipped');
-            } else {
-                page.style.zIndex = pages.length - (index - currentPageIndex);
-                page.classList.remove('flipped');
-            }
-        });
-    }
-
-    function flipPage(forward) {
-        if (isAnimating) return;
-        if (autoFlipActive) return;
-
-        if (forward) {
-            if (currentPageIndex >= pages.length - 1) return;
-
-            isAnimating = true;
-            const pageToFlip = pages[currentPageIndex];
-            pageToFlip.style.zIndex = 9999;
-            void pageToFlip.offsetWidth;
-            pageToFlip.classList.add('flipped');
-
-            const onEnd = (e) => {
-                if (e.propertyName === 'transform') {
-                    pageToFlip.removeEventListener('transitionend', onEnd);
-                    currentPageIndex++;
-                    updateZIndices();
-                    isAnimating = false;
-                }
-            };
-            pageToFlip.addEventListener('transitionend', onEnd);
-        } else {
-            if (currentPageIndex <= 0) return;
-            currentPageIndex--;
-            updateZIndices();
-        }
-    }
-
-    function startAutoFlip() {
-        if (autoFlipActive) return;
-        autoFlipActive = true;
+    (function() {
+        // Элементы прелоадера
+        const preloader = document.getElementById('preloaderScreen');
+        const bookWrapper = document.getElementById('mainBookWrapper');
+        const loadingImg = document.getElementById('loadingImage');
+        const readyMsgDiv = document.getElementById('readyMessage');
         
-        autoFlipInterval = setInterval(() => {
-            if (currentPageIndex < 33) {
-                const wasAutoFlip = autoFlipActive;
-                autoFlipActive = false;
-                flipPage(true);
-                autoFlipActive = wasAutoFlip;
-            } else {
-                stopAutoFlip();
-            }
-        }, 1200);
-    }
-
-    function stopAutoFlip() {
-        if (autoFlipInterval) {
-            clearInterval(autoFlipInterval);
-            autoFlipInterval = null;
-        }
-        autoFlipActive = false;
-    }
-
-    pages.forEach(page => {
-        page.addEventListener('click', (event) => {
-            if (autoFlipActive) return;
-            const rect = page.getBoundingClientRect();
-            const clickX = event.clientX - rect.left;
-            const isRightSide = clickX > rect.width / 2;
-            flipPage(isRightSide);
-        });
-    });
-
-    updateZIndices();
-
-    const video29 = document.getElementById('birthdayVideo29');
-    const playBtn29 = document.getElementById('playVideoBtn29');
-    if (playBtn29 && video29) {
-        playBtn29.addEventListener('click', (e) => {
-            e.stopPropagation();
-            video29.play();
-            playBtn29.style.display = 'none';
-        });
-        video29.addEventListener('ended', () => {
-            playBtn29.style.display = 'flex';
-            playBtn29.textContent = '🔄 НАЖМИ, ЧТОБЫ ПОВТОРИТЬ';
-        });
-    }
-
-    const musicBtn30 = document.getElementById('musicBtn30');
-    let audio30 = null;
-    let isMusicPlaying = false;
-
-    if (musicBtn30) {
-        musicBtn30.addEventListener('click', (e) => {
-            e.stopPropagation();
+        let spinTimeout;
+        
+        function stopSpinAndZoomAndShowBook() {
+            if (spinTimeout) clearTimeout(spinTimeout);
             
-            if (audio30 && isMusicPlaying) {
-                audio30.pause();
-                audio30.currentTime = 0;
-                isMusicPlaying = false;
-                musicBtn30.classList.remove('playing');
-                musicBtn30.textContent = '🎵 Включить музыку';
-                stopAutoFlip();
-            } else {
-                const audioUrl = 'https://res.cloudinary.com/dsd6n5bvj/video/upload/v1780316445/Jacky_ethx5h.mp3';
-                audio30 = new Audio(audioUrl);
-                audio30.play().catch(err => {
-                    alert('Нажми ещё раз (Safari требует повторного нажатия)');
-                    audio30.play().catch(e => console.log('всё равно не получилось'));
+            // Останавливаем вращение и увеличиваем изображение
+            loadingImg.classList.remove('spinning-rotate');
+            loadingImg.classList.add('zoom-in-effect');
+            
+            // Показываем надпись "ВСЁ ГОТОВО!"
+            readyMsgDiv.classList.add('show');
+            
+            // Через небольшую задержку скрываем прелоадер и показываем книгу
+            setTimeout(() => {
+                preloader.style.opacity = "0";
+                setTimeout(() => {
+                    preloader.style.display = "none";
+                    bookWrapper.classList.add('visible');
+                    initBookAndInteractions();
+                }, 800);
+            }, 700);
+        }
+        
+        // Таймер на 5 секунд, после чего останавливаем вращение и увеличиваем
+        spinTimeout = setTimeout(() => {
+            stopSpinAndZoomAndShowBook();
+        }, 5000);
+        
+        // ---------- ЛОГИКА ПЕРЕЛИСТЫВАНИЯ КНИГИ ----------
+        let pages = [];
+        let currentPageIndex = 0;
+        let isAnimating = false;
+        let autoFlipInterval = null;
+        let autoFlipActive = false;
+        let bookInitialized = false;
+        
+        function initBookAndInteractions() {
+            if (bookInitialized) return;
+            bookInitialized = true;
+            
+            pages = Array.from(document.querySelectorAll('#book .page'));
+            if (pages.length === 0) return;
+            
+            function updateZIndices() {
+                pages.forEach((page, index) => {
+                    if (index < currentPageIndex) {
+                        page.style.zIndex = index + 1;
+                        page.classList.add('flipped');
+                    } else {
+                        page.style.zIndex = pages.length - (index - currentPageIndex);
+                        page.classList.remove('flipped');
+                    }
                 });
-                isMusicPlaying = true;
-                musicBtn30.classList.add('playing');
-                musicBtn30.textContent = '🔊 Остановить музыку';
-                
-                startAutoFlip();
-                
-                audio30.onended = () => {
-                    isMusicPlaying = false;
-                    musicBtn30.classList.remove('playing');
-                    musicBtn30.textContent = '🎵 Включить музыку';
-                    audio30 = null;
-                    stopAutoFlip();
-                };
             }
+            
+            function flipPage(forward) {
+                if (isAnimating) return;
+                if (autoFlipActive) return;
+                
+                if (forward) {
+                    if (currentPageIndex >= pages.length - 1) return;
+                    isAnimating = true;
+                    const pageToFlip = pages[currentPageIndex];
+                    pageToFlip.style.zIndex = 9999;
+                    void pageToFlip.offsetWidth;
+                    pageToFlip.classList.add('flipped');
+                    
+                    const onEnd = (e) => {
+                        if (e.propertyName === 'transform') {
+                            pageToFlip.removeEventListener('transitionend', onEnd);
+                            currentPageIndex++;
+                            updateZIndices();
+                            isAnimating = false;
+                        }
+                    };
+                    pageToFlip.addEventListener('transitionend', onEnd);
+                } else {
+                    if (currentPageIndex <= 0) return;
+                    currentPageIndex--;
+                    updateZIndices();
+                }
+            }
+            
+            function startAutoFlip() {
+                if (autoFlipActive) return;
+                autoFlipActive = true;
+                autoFlipInterval = setInterval(() => {
+                    if (currentPageIndex < 33) {
+                        const wasAuto = autoFlipActive;
+                        autoFlipActive = false;
+                        flipPage(true);
+                        autoFlipActive = wasAuto;
+                    } else {
+                        stopAutoFlip();
+                    }
+                }, 1200);
+            }
+            
+            function stopAutoFlip() {
+                if (autoFlipInterval) {
+                    clearInterval(autoFlipInterval);
+                    autoFlipInterval = null;
+                }
+                autoFlipActive = false;
+            }
+            
+            pages.forEach(page => {
+                page.addEventListener('click', (event) => {
+                    if (autoFlipActive) return;
+                    const rect = page.getBoundingClientRect();
+                    const clickX = event.clientX - rect.left;
+                    const isRightSide = clickX > rect.width / 2;
+                    flipPage(isRightSide);
+                });
+            });
+            
+            updateZIndices();
+            
+            // Видео 29
+            const video29 = document.getElementById('birthdayVideo29');
+            const playBtn29 = document.getElementById('playVideoBtn29');
+            if (playBtn29 && video29) {
+                playBtn29.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    video29.play().catch(err => console.log("autoplay blocked"));
+                    playBtn29.style.display = 'none';
+                });
+                video29.addEventListener('ended', () => {
+                    playBtn29.style.display = 'flex';
+                    playBtn29.textContent = '🔄 НАЖМИ, ЧТОБЫ ПОВТОРИТЬ';
+                });
+            }
+            
+            // Аудио 30 + автофлип
+            const musicBtn30 = document.getElementById('musicBtn30');
+            let audio30 = null;
+            let isMusicPlaying = false;
+            
+            if (musicBtn30) {
+                musicBtn30.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (audio30 && isMusicPlaying) {
+                        audio30.pause();
+                        audio30.currentTime = 0;
+                        isMusicPlaying = false;
+                        musicBtn30.classList.remove('playing');
+                        musicBtn30.textContent = '🎵 Включить музыку';
+                        stopAutoFlip();
+                    } else {
+                        const audioUrl = 'https://res.cloudinary.com/dsd6n5bvj/video/upload/v1780316445/Jacky_ethx5h.mp3';
+                        audio30 = new Audio(audioUrl);
+                        audio30.play().catch(err => {
+                            alert('Нажми ещё раз (требуется взаимодействие)');
+                            audio30.play().catch(e => console.log("audio blocked"));
+                        });
+                        isMusicPlaying = true;
+                        musicBtn30.classList.add('playing');
+                        musicBtn30.textContent = '🔊 Остановить музыку';
+                        startAutoFlip();
+                        
+                        audio30.onended = () => {
+                            isMusicPlaying = false;
+                            musicBtn30.classList.remove('playing');
+                            musicBtn30.textContent = '🎵 Включить музыку';
+                            audio30 = null;
+                            stopAutoFlip();
+                        };
+                    }
+                });
+            }
+        }
+        
+        // Наблюдатель за появлением книги
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === 'class' && bookWrapper.classList.contains('visible') && !bookInitialized) {
+                    initBookAndInteractions();
+                }
+            });
         });
-    }
+        observer.observe(bookWrapper, { attributes: true });
+    })();
 </script>
 </body>
 </html>
