@@ -3,15 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Комикс для Ани! 🔄 Вращение изображения</title>
+    <title>Секретный журнал 📖</title>
     <style>
-        /* ---------- СТИЛИ ДЛЯ ЭКРАНА ЗАГРУЗКИ: ВРАЩЕНИЕ САМОЙ КАРТИНКИ ---------- */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        /* ---------- ЗАГЛУШКА ДЛЯ ТЕЛЕФОНОВ ---------- */
+        .block-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(145deg, #111114, #1a1a1f);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 20000;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif;
+            text-align: center;
+            padding: 30px;
+            transition: opacity 0.4s ease;
+            opacity: 1;
+        }
+
+        .block-content {
+            background: rgba(255,245,220,0.95);
+            padding: 40px 30px;
+            border-radius: 60px;
+            box-shadow: 0 25px 40px rgba(0,0,0,0.4), inset 0 0 0 4px #ffaa66;
+            max-width: 380px;
+        }
+
+        .block-emoji {
+            font-size: 70px;
+            margin-bottom: 20px;
+        }
+
+        .block-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #b00020;
+            margin-bottom: 15px;
+        }
+
+        .block-text {
+            font-size: 18px;
+            color: #3b2a1f;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+
+        .secret-hint {
+            font-size: 13px;
+            color: #8a6e4b;
+            border-top: 1px dashed #d4b47c;
+            padding-top: 18px;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        /* ---------- ЭКРАН ЗАГРУЗКИ (изначально скрыт, показывается только если обход) ---------- */
         .preloader-screen {
             position: fixed;
             top: 0;
@@ -23,7 +78,7 @@
             justify-content: center;
             align-items: center;
             z-index: 10000;
-            transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            transition: opacity 0.6s ease;
             opacity: 1;
         }
 
@@ -43,92 +98,170 @@
             border-radius: 48px;
             box-shadow: 0 20px 35px rgba(0, 0, 0, 0.5), 0 0 0 4px rgba(255, 200, 100, 0.3);
             will-change: transform;
-            transition: transform 0.9s cubic-bezier(0.2, 0.9, 0.4, 1.2), border-radius 0.5s ease, box-shadow 0.6s ease;
             display: block;
         }
 
-        /* Анимация вращения самого изображения (верхний угол становится снизу и т.д.) */
-        .preloader-image.spinning-rotate {
-            animation: spinImage 0.4s infinite linear;
+        .preloader-image.spinning-fast {
+            animation: spinRapid 0.35s infinite linear;
         }
 
-        @keyframes spinImage {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
+        @keyframes spinRapid {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        /* Эффект увеличения и остановки вращения */
-        .preloader-image.zoom-in-effect {
-            animation: none !important;
-            transform: scale(1.6) rotate(0deg) !important;
-            border-radius: 20px !important;
-            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.7), 0 0 0 6px #ffd966;
-            transition: transform 0.9s cubic-bezier(0.2, 0.95, 0.4, 1.1), border-radius 0.5s ease, box-shadow 0.6s ease;
+        .preloader-image.slow-down {
+            animation: spinSlowDown 1.2s ease-out forwards;
         }
 
-        .loading-text {
+        @keyframes spinSlowDown {
+            0% { transform: rotate(0deg); }
+            30% { transform: rotate(180deg); }
+            60% { transform: rotate(270deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .preloader-image.heart-pulse {
+            animation: heartBeat 0.7s ease-in-out infinite;
+            transform-origin: center;
+        }
+
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            35% { transform: scale(1.18); }
+            50% { transform: scale(1.08); }
+            70% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        .milana-text {
             font-family: 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif;
             font-size: 28px;
             font-weight: bold;
-            background: linear-gradient(135deg, #FFD966, #FF884D);
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            letter-spacing: 2px;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-
-        .loading-dots {
-            display: inline-flex;
-            gap: 6px;
-            margin-left: 6px;
-        }
-
-        .loading-dots span {
-            font-size: 32px;
-            animation: dotsBlink 1.4s infinite;
-            color: #FFB347;
-        }
-
-        .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-        .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes dotsBlink {
-            0%, 20% { opacity: 0.2; transform: translateY(0px);}
-            50% { opacity: 1; transform: translateY(-6px);}
-            80%, 100% { opacity: 0.2; transform: translateY(0px);}
-        }
-
-        .ready-message {
-            font-family: 'Comic Sans MS', cursive;
-            font-size: 22px;
-            background: rgba(0,0,0,0.7);
-            color: #ffecb3;
-            padding: 10px 26px;
-            border-radius: 50px;
-            backdrop-filter: blur(8px);
-            font-weight: bold;
             opacity: 0;
-            transform: scale(0.8);
+            transform: scale(0.7);
             transition: all 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
-            margin-top: 5px;
-            letter-spacing: 1px;
+            margin-top: 10px;
         }
 
-        .ready-message.show {
+        .milana-text.show {
             opacity: 1;
             transform: scale(1);
         }
 
-        /* ---------- ОСНОВНОЙ КОНТЕЙНЕР КНИГИ (изначально скрыт) ---------- */
+        /* ---------- ЭКРАН ВОПРОСОВ (квиз) ---------- */
+        .quiz-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2b2b3a, #1e1e2a);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0s linear 0.5s;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif;
+            padding: 20px;
+        }
+
+        .quiz-screen.active {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.5s ease, visibility 0s linear 0s;
+        }
+
+        .quiz-container {
+            background: rgba(255, 250, 235, 0.95);
+            border-radius: 48px;
+            padding: 30px 25px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.4), 0 0 0 8px #ffd966;
+            text-align: center;
+        }
+
+        .quiz-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #b83b5e;
+            margin-bottom: 10px;
+        }
+
+        .quiz-sub {
+            color: #6b4e3a;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .quiz-question {
+            background: #fff0d4;
+            border-radius: 30px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            text-align: left;
+            box-shadow: 0 5px 12px rgba(0,0,0,0.1);
+        }
+
+        .quiz-question p {
+            font-weight: bold;
+            font-size: 18px;
+            color: #4a2a1e;
+            margin-bottom: 10px;
+        }
+
+        .quiz-question input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 60px;
+            border: 2px solid #e2b88a;
+            background: white;
+            font-family: inherit;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .quiz-question input:focus {
+            border-color: #b83b5e;
+        }
+
+        .quiz-btn {
+            background: #b83b5e;
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 50px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: 0.2s;
+            box-shadow: 0 6px 0 #6e2a44;
+        }
+
+        .quiz-btn:active {
+            transform: translateY(2px);
+        }
+
+        .error-msg {
+            color: #d32f2f;
+            margin-top: 15px;
+            font-weight: bold;
+            min-height: 45px;
+        }
+
+        /* ---------- ОСНОВНОЙ ЖУРНАЛ (раньше комикс) ---------- */
         .main-book-wrapper {
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.9s ease 0.15s, visibility 0s linear 1s;
+            transition: opacity 0.9s ease;
             width: 100%;
             height: 100%;
             position: fixed;
@@ -143,12 +276,12 @@
             align-items: center;
             padding: 20px;
             overflow: hidden;
+            z-index: 8000;
         }
 
         .main-book-wrapper.visible {
             opacity: 1;
             visibility: visible;
-            transition: opacity 0.85s ease;
         }
 
         .book-container {
@@ -184,7 +317,6 @@
             backface-visibility: hidden;
             overflow: hidden;
             box-shadow: -4px 8px 18px rgba(0, 0, 0, 0.18);
-            will-change: transform, box-shadow;
         }
 
         .page.flipped {
@@ -193,21 +325,10 @@
         }
 
         @media (min-width: 1024px) {
-            .book-container {
-                max-width: 900px;
-                height: 80vh;
-                max-height: 750px;
-            }
-            .book {
-                transform: translateX(25%);
-            }
-            .page {
-                width: 50%;
-            }
-            .page.flipped {
-                transform: rotateY(-180deg) translateX(100%);
-                box-shadow: 18px 12px 32px rgba(0, 0, 0, 0.32);
-            }
+            .book-container { max-width: 900px; height: 80vh; max-height: 750px; }
+            .book { transform: translateX(25%); }
+            .page { width: 50%; }
+            .page.flipped { transform: rotateY(-180deg) translateX(100%); }
         }
 
         .comic-frame {
@@ -226,7 +347,6 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            background-color: #fcfcfc;
             border-bottom: 4px solid #000;
         }
 
@@ -258,141 +378,56 @@
             pointer-events: none;
         }
 
-        .title-page {
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-        }
-        .title-page .comic-frame {
-            background: transparent;
-            border-color: #fff;
-            justify-content: center;
-            align-items: center;
-        }
-        .title-page .photo {
-            display: none;
-        }
-        .title-page .text-bubble {
-            background: transparent;
-            color: #fff;
-            flex-direction: column;
-            gap: 15px;
-            flex: 1;
-        }
-        .main-title {
-            font-size: 26px;
-            line-height: 1.3;
-            text-shadow: 2px 2px 0px #000;
-            font-weight: bold;
-        }
-        .sub-author {
-            font-size: 16px;
-            font-style: italic;
-            opacity: 0.9;
-        }
-        .title-page .page-badge {
-            background: #fff;
-            color: #000;
-        }
-        .big-text-page .text-bubble {
-            font-size: 24px;
-            line-height: 1.5;
-        }
-        .text-only-page .photo {
-            display: none;
-        }
-        .text-only-page .comic-frame {
-            justify-content: center;
-        }
-        .text-only-page .text-bubble {
-            flex: 1;
-            font-size: 16px;
-            line-height: 1.5;
-            padding: 20px;
-        }
-        .video-page .video-container {
-            flex: 1.3;
-            background: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-            border-bottom: 4px solid #000;
-        }
-        .video-page .video-container video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .video-page .play-btn {
-            position: absolute;
-            background: rgba(0,0,0,0.75);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 40px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            font-family: 'Comic Sans MS', cursive;
-            z-index: 15;
-            backdrop-filter: blur(5px);
-            transition: 0.2s;
-        }
-        .video-page .play-btn:hover {
-            background: rgba(0,0,0,0.9);
-            transform: scale(1.02);
-        }
-        .audio-page .text-bubble {
-            flex-direction: column;
-            gap: 12px;
-        }
-        .audio-btn {
-            background: #4a6fa5;
-            color: white;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 40px;
-            font-size: 14px;
-            font-weight: bold;
-            font-family: 'Comic Sans MS', cursive;
-            cursor: pointer;
-            transition: 0.2s;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-            margin-top: 8px;
-        }
-        .audio-btn:hover {
-            background: #2c4c7a;
-            transform: scale(1.02);
-        }
-        .audio-btn.playing {
-            background: #2a7a3b;
-            animation: pulse 1s infinite;
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
+        .title-page { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        .title-page .comic-frame { background: transparent; border-color: #fff; justify-content: center; align-items: center; }
+        .title-page .photo { display: none; }
+        .title-page .text-bubble { background: transparent; color: #fff; flex-direction: column; gap: 15px; flex: 1; }
+        .main-title { font-size: 26px; line-height: 1.3; text-shadow: 2px 2px 0px #000; font-weight: bold; }
+        .sub-author { font-size: 16px; font-style: italic; opacity: 0.9; }
+        .video-page .video-container { flex: 1.3; background: #000; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; border-bottom: 4px solid #000; }
+        .video-page .video-container video { width: 100%; height: 100%; object-fit: cover; }
+        .video-page .play-btn { position: absolute; background: rgba(0,0,0,0.75); color: white; border: none; padding: 12px 20px; border-radius: 40px; font-size: 16px; font-weight: bold; cursor: pointer; font-family: inherit; z-index: 15; backdrop-filter: blur(5px); }
+        .audio-page .text-bubble { flex-direction: column; gap: 12px; }
+        .audio-btn { background: #4a6fa5; color: white; border: none; padding: 10px 18px; border-radius: 40px; font-size: 14px; font-weight: bold; cursor: pointer; transition: 0.2s; margin-top: 8px; }
+        .audio-btn.playing { background: #2a7a3b; animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
 
-<!-- ПРЕЛОАДЕР: ВРАЩЕНИЕ ИЗОБРАЖЕНИЯ ВОКРУГ СВОЕЙ ОСИ -->
-<div class="preloader-screen" id="preloaderScreen">
-    <div class="preloader-content">
-        <img id="loadingImage" class="preloader-image spinning-rotate" src="https://i.imgur.com/BG3e2Uh.png" alt="Магическая загрузка">
-        <div class="loading-text">
-            ЗАГРУЗКА КОМИКСА
-            <div class="loading-dots">
-                <span>.</span><span>.</span><span>.</span>
-            </div>
-        </div>
-        <div id="readyMessage" class="ready-message">✨ ВСЁ ГОТОВО! ✨</div>
+<!-- ЗАГЛУШКА ДЛЯ ТЕЛЕФОНОВ (показывается только если мобильное устройство, но можно обойти) -->
+<div id="blockScreen" class="block-screen" style="display: none;">
+    <div class="block-content">
+        <div class="block-emoji">📱🚫💻</div>
+        <div class="block-title">ОТКРОЙ С КОМПЬЮТЕРА</div>
+        <div class="block-text">я же говорил 😡<br>Этот журнал работает только на большом экране.</div>
+        <div class="secret-hint">* секретный обход существует, но тебе его не найти *</div>
     </div>
 </div>
 
-<!-- ОСНОВНАЯ КНИГА -->
-<div class="main-book-wrapper" id="mainBookWrapper">
+<!-- ПРЕЛОАДЕР с анимацией (появляется только при обходе) -->
+<div id="preloaderScreen" class="preloader-screen" style="display: none;">
+    <div class="preloader-content">
+        <img id="loadingImage" class="preloader-image spinning-fast" src="https://i.imgur.com/BG3e2Uh.png" alt="Загрузка">
+        <div id="milanaText" class="milana-text">это милана 👍</div>
+    </div>
+</div>
+
+<!-- ЭКРАН ВОПРОСОВ -->
+<div id="quizScreen" class="quiz-screen">
+    <div class="quiz-container">
+        <div class="quiz-title">🔐 СЕКРЕТНЫЙ ЖУРНАЛ</div>
+        <div class="quiz-sub">Ответь на вопросы, чтобы открыть</div>
+        <div class="quiz-question"><p>❓ Вопрос 1: сколько вам лет?</p><input type="text" id="q1" placeholder="Введите число" autocomplete="off"></div>
+        <div class="quiz-question"><p>❓ Вопрос 2: как вас зовут?</p><input type="text" id="q2" placeholder="Имя" autocomplete="off"></div>
+        <div class="quiz-question"><p>❓ Вопрос 3: малинник это?</p><input type="text" id="q3" placeholder="Кто/что это?" autocomplete="off"></div>
+        <button class="quiz-btn" id="submitQuizBtn">✨ ОТКРЫТЬ ЖУРНАЛ ✨</button>
+        <div class="error-msg" id="quizError"></div>
+    </div>
+</div>
+
+<!-- ОСНОВНОЙ ЖУРНАЛ (комикс) -->
+<div id="mainBookWrapper" class="main-book-wrapper">
     <div class="book-container">
         <div class="book" id="book">
             <div class="page title-page"><div class="comic-frame"><div class="text-bubble"><div class="main-title">КАК ЖИЛА АНЯ<br>или СДРАОЛ!</div><div class="sub-author">автор: лучший друг</div></div><div class="page-badge">1 / 35</div></div></div>
@@ -436,51 +471,106 @@
 
 <script>
     (function() {
-        // Элементы прелоадера
-        const preloader = document.getElementById('preloaderScreen');
-        const bookWrapper = document.getElementById('mainBookWrapper');
-        const loadingImg = document.getElementById('loadingImage');
-        const readyMsgDiv = document.getElementById('readyMessage');
+        // Определяем мобильное устройство (iPhone, Android, телефон)
+        const isMobile = /iPhone|iPad|iPod|Android|BlackBerry|Windows Phone|Mobi/i.test(navigator.userAgent) || (window.innerWidth <= 800);
         
-        let spinTimeout;
+        let secretUnlocked = false;
+        let tapCount = 0;
+        let tapTimer = null;
         
-        function stopSpinAndZoomAndShowBook() {
-            if (spinTimeout) clearTimeout(spinTimeout);
+        // Функция полного запуска журнала (обходной путь)
+        function launchSecretJournal() {
+            if (secretUnlocked) return;
+            secretUnlocked = true;
             
-            // Останавливаем вращение и увеличиваем изображение
-            loadingImg.classList.remove('spinning-rotate');
-            loadingImg.classList.add('zoom-in-effect');
+            // Скрываем блокировочный экран если он виден
+            const blockDiv = document.getElementById('blockScreen');
+            if (blockDiv) blockDiv.style.display = 'none';
             
-            // Показываем надпись "ВСЁ ГОТОВО!"
-            readyMsgDiv.classList.add('show');
+            // Показываем прелоадер и запускаем полную цепочку анимации + квиз
+            const preloader = document.getElementById('preloaderScreen');
+            const loadingImg = document.getElementById('loadingImage');
+            const milanaSpan = document.getElementById('milanaText');
             
-            // Через небольшую задержку скрываем прелоадер и показываем книгу
-            setTimeout(() => {
-                preloader.style.opacity = "0";
-                setTimeout(() => {
-                    preloader.style.display = "none";
-                    bookWrapper.classList.add('visible');
-                    initBookAndInteractions();
-                }, 800);
-            }, 700);
+            preloader.style.display = 'flex';
+            
+            let timer1, timer2;
+            
+            function startLoadAnim() {
+                loadingImg.classList.add('spinning-fast');
+                timer1 = setTimeout(() => {
+                    loadingImg.classList.remove('spinning-fast');
+                    loadingImg.classList.add('slow-down');
+                    timer2 = setTimeout(() => {
+                        loadingImg.classList.remove('slow-down');
+                        loadingImg.classList.add('heart-pulse');
+                        milanaSpan.classList.add('show');
+                        setTimeout(() => {
+                            preloader.style.opacity = "0";
+                            setTimeout(() => {
+                                preloader.style.display = "none";
+                                document.getElementById('quizScreen').classList.add('active');
+                            }, 500);
+                        }, 2000);
+                    }, 1200);
+                }, 5000);
+            }
+            startLoadAnim();
         }
         
-        // Таймер на 5 секунд, после чего останавливаем вращение и увеличиваем
-        spinTimeout = setTimeout(() => {
-            stopSpinAndZoomAndShowBook();
-        }, 5000);
+        // Если НЕ мобильное устройство — сразу запускаем журнал
+        if (!isMobile) {
+            launchSecretJournal();
+        } 
+        else {
+            // Телефон: показываем заглушку, и настраиваем секретный тап в правый верхний угол
+            const blockScreenDiv = document.getElementById('blockScreen');
+            blockScreenDiv.style.display = 'flex';
+            
+            // Функция для отслеживания кликов в правом верхнем углу (три подряд)
+            function handleSecretTap(e) {
+                const x = e.clientX;
+                const y = e.clientY;
+                const viewportWidth = window.innerWidth;
+                const viewportHeight = window.innerHeight;
+                // правый верхний угол: ширина > 70% и высота < 30%
+                const isTopRight = (x > viewportWidth * 0.7) && (y < viewportHeight * 0.3);
+                
+                if (isTopRight) {
+                    tapCount++;
+                    if (tapTimer) clearTimeout(tapTimer);
+                    tapTimer = setTimeout(() => {
+                        tapCount = 0;
+                    }, 800);
+                    
+                    if (tapCount >= 3) {
+                        // Секретный обход активирован!
+                        tapCount = 0;
+                        if (tapTimer) clearTimeout(tapTimer);
+                        launchSecretJournal();
+                        // убираем обработчик после активации (чтобы не мешал)
+                        document.removeEventListener('click', handleSecretTap);
+                    }
+                } else {
+                    tapCount = 0;
+                    if (tapTimer) clearTimeout(tapTimer);
+                }
+            }
+            
+            document.addEventListener('click', handleSecretTap);
+        }
         
-        // ---------- ЛОГИКА ПЕРЕЛИСТЫВАНИЯ КНИГИ ----------
+        // ---------- ЛОГИКА КВИЗА И ЖУРНАЛА (общая) ----------
         let pages = [];
         let currentPageIndex = 0;
         let isAnimating = false;
         let autoFlipInterval = null;
         let autoFlipActive = false;
-        let bookInitialized = false;
+        let journalInitialized = false;
         
-        function initBookAndInteractions() {
-            if (bookInitialized) return;
-            bookInitialized = true;
+        function initJournal() {
+            if (journalInitialized) return;
+            journalInitialized = true;
             
             pages = Array.from(document.querySelectorAll('#book .page'));
             if (pages.length === 0) return;
@@ -500,7 +590,6 @@
             function flipPage(forward) {
                 if (isAnimating) return;
                 if (autoFlipActive) return;
-                
                 if (forward) {
                     if (currentPageIndex >= pages.length - 1) return;
                     isAnimating = true;
@@ -508,7 +597,6 @@
                     pageToFlip.style.zIndex = 9999;
                     void pageToFlip.offsetWidth;
                     pageToFlip.classList.add('flipped');
-                    
                     const onEnd = (e) => {
                         if (e.propertyName === 'transform') {
                             pageToFlip.removeEventListener('transitionend', onEnd);
@@ -557,16 +645,15 @@
                     flipPage(isRightSide);
                 });
             });
-            
             updateZIndices();
             
-            // Видео 29
+            // видео
             const video29 = document.getElementById('birthdayVideo29');
             const playBtn29 = document.getElementById('playVideoBtn29');
             if (playBtn29 && video29) {
                 playBtn29.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    video29.play().catch(err => console.log("autoplay blocked"));
+                    video29.play().catch(()=>{});
                     playBtn29.style.display = 'none';
                 });
                 video29.addEventListener('ended', () => {
@@ -575,11 +662,10 @@
                 });
             }
             
-            // Аудио 30 + автофлип
+            // аудио
             const musicBtn30 = document.getElementById('musicBtn30');
             let audio30 = null;
             let isMusicPlaying = false;
-            
             if (musicBtn30) {
                 musicBtn30.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -593,15 +679,11 @@
                     } else {
                         const audioUrl = 'https://res.cloudinary.com/dsd6n5bvj/video/upload/v1780316445/Jacky_ethx5h.mp3';
                         audio30 = new Audio(audioUrl);
-                        audio30.play().catch(err => {
-                            alert('Нажми ещё раз (требуется взаимодействие)');
-                            audio30.play().catch(e => console.log("audio blocked"));
-                        });
+                        audio30.play().catch(() => alert('Нажми ещё раз'));
                         isMusicPlaying = true;
                         musicBtn30.classList.add('playing');
                         musicBtn30.textContent = '🔊 Остановить музыку';
                         startAutoFlip();
-                        
                         audio30.onended = () => {
                             isMusicPlaying = false;
                             musicBtn30.classList.remove('playing');
@@ -614,15 +696,37 @@
             }
         }
         
-        // Наблюдатель за появлением книги
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.attributeName === 'class' && bookWrapper.classList.contains('visible') && !bookInitialized) {
-                    initBookAndInteractions();
-                }
-            });
+        // Обработка квиза
+        const submitBtn = document.getElementById('submitQuizBtn');
+        const errorDiv = document.getElementById('quizError');
+        const quizScreen = document.getElementById('quizScreen');
+        const bookWrapper = document.getElementById('mainBookWrapper');
+        
+        function checkQuizAnswers() {
+            const a1 = document.getElementById('q1').value.trim().toLowerCase();
+            const a2 = document.getElementById('q2').value.trim().toLowerCase();
+            const a3 = document.getElementById('q3').value.trim().toLowerCase();
+            if (a1 === '16' && a2 === 'анна' && a3 === 'фигурист') {
+                errorDiv.textContent = '';
+                quizScreen.classList.remove('active');
+                bookWrapper.classList.add('visible');
+                initJournal();
+            } else {
+                errorDiv.textContent = '❌ Неправильно! (16 / Анна / фигурист)';
+            }
+        }
+        
+        if (submitBtn) submitBtn.addEventListener('click', checkQuizAnswers);
+        ['q1','q2','q3'].forEach(id => {
+            const inp = document.getElementById(id);
+            if(inp) inp.addEventListener('keypress', (e) => { if(e.key === 'Enter') checkQuizAnswers(); });
         });
-        observer.observe(bookWrapper, { attributes: true });
+        
+        // Если уже открыли через обход, но квиз активирован, привяжем инициализацию после успешного квиза
+        const quizObserver = new MutationObserver((muts) => {
+            if(bookWrapper.classList.contains('visible') && !journalInitialized) initJournal();
+        });
+        quizObserver.observe(bookWrapper, { attributes: true });
     })();
 </script>
 </body>
